@@ -91,8 +91,42 @@
     .marca { display: flex; align-items: center; gap: 12px; color: var(--tinta); text-decoration: none; font: 600 1.02rem var(--titulos); letter-spacing: -.01em; }
     .marca img { width: 32px; height: 32px; border-radius: 7px; }
     .menu { display: flex; align-items: center; gap: 30px; }
-    .menu a:not(.boton) { color: var(--tinta-suave); text-decoration: none; font-size: .95rem; }
-    .menu a:not(.boton):hover { color: var(--tinta); }
+    .menu > a:not(.boton) { color: var(--tinta-suave); text-decoration: none; font-size: .95rem; }
+    .menu > a:not(.boton):hover { color: var(--tinta); }
+
+    /* Botón y menú «Compartir» de la cabecera */
+    .compartir-menu { position: relative; }
+    .menu .boton-compartir {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 9px 14px; border: 1px solid var(--linea); border-radius: 6px;
+      background: var(--tarjeta); color: var(--tinta); text-decoration: none;
+      font: 600 .92rem/1 var(--sans); cursor: pointer; transition: border-color .15s, background .15s;
+    }
+    .menu .boton-compartir:hover, .menu .boton-compartir[aria-expanded="true"] { border-color: var(--acento); color: var(--acento); }
+    .boton-compartir svg { width: 16px; height: 16px; flex: none; }
+    .panel-compartir {
+      position: absolute; right: 0; top: calc(100% + 10px); z-index: 30; width: 270px;
+      background: var(--tarjeta); border: 1px solid var(--linea); border-radius: 10px; padding: 8px;
+      box-shadow: 0 18px 40px -16px rgba(60, 35, 15, .45);
+      animation: panel-entra .16s ease-out;
+    }
+    .panel-compartir[hidden] { display: none; }
+    @keyframes panel-entra { from { opacity: 0; transform: translateY(-6px); } }
+    .panel-compartir .panel-titulo { margin: 4px 10px 6px; font-size: .72rem; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--tinta-suave); }
+    .panel-compartir .panel-url {
+      margin: 0 6px 6px; padding: 8px 10px; border-radius: 6px; background: var(--papel-2);
+      font: 500 .78rem var(--mono); color: var(--tinta-suave); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    }
+    .menu .panel-compartir a, .panel-compartir button {
+      display: flex; align-items: center; gap: 12px; width: 100%;
+      padding: 10px; border: 0; border-radius: 6px; background: transparent;
+      color: var(--tinta); font: 500 .95rem/1.2 var(--sans); text-align: left; text-decoration: none; cursor: pointer;
+    }
+    .menu .panel-compartir a:hover, .panel-compartir button:hover,
+    .menu .panel-compartir a:focus-visible, .panel-compartir button:focus-visible { background: var(--acento-suave); color: var(--tinta); outline: none; }
+    .panel-compartir svg { width: 18px; height: 18px; flex: none; color: var(--acento); }
+    .panel-compartir .hecho, .panel-compartir .hecho svg { color: var(--oliva); }
+    .panel-compartir hr { border: 0; border-top: 1px solid var(--linea); margin: 6px 4px; }
 
     /* ---------- Portada ---------- */
     .portada { padding: clamp(40px, 6vw, 88px) 0 clamp(28px, 3.5vw, 48px); overflow: hidden; }
@@ -381,7 +415,8 @@
     }
     @media (max-width: 760px) {
       body { font-size: 16px; }
-      .menu a:not(.boton) { display: none; }
+      .menu > a:not(.boton) { display: none; }
+      .menu { gap: 10px; }
       .titular, .modos, .preguntas { grid-template-columns: 1fr; }
       details:nth-last-child(2):nth-child(odd) { border-bottom: 0; }
       .ficha { grid-template-columns: repeat(2, auto); }
@@ -407,6 +442,10 @@
       .aviso-capturas { grid-template-columns: 1fr; }
       .uso { grid-template-columns: 1fr; }
       .escaparate::after { display: none; }
+      .marca { font-size: .95rem; }
+      .boton-compartir span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+      .menu .boton-compartir { padding: 9px 10px; }
+      .panel-compartir { position: fixed; left: 16px; right: 16px; top: 64px; width: auto; }
     }
   </style>
 </head>
@@ -421,6 +460,41 @@
         <a href="#bajo-el-capo">Bajo el capó</a>
         <a href="#instalacion">Instalación</a>
         <a href="#preguntas">Preguntas</a>
+        <div class="compartir-menu">
+          <a class="boton-compartir" id="boton-compartir" href="#compartir" aria-haspopup="menu" aria-expanded="false" aria-controls="panel-compartir">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.6 13.5 6.8 4M15.4 6.5l-6.8 4"/></svg>
+            <span>Compartir</span>
+          </a>
+          <div class="panel-compartir" id="panel-compartir" role="menu" aria-label="Compartir esta web" tabindex="-1" hidden>
+            <p class="panel-titulo">Compartir esta web</p>
+            <p class="panel-url">oriol-1.github.io/descargador-de-videos</p>
+            <button type="button" role="menuitem" data-compartir="copiar">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 14a5 5 0 0 0 7.1 0l3-3a5 5 0 0 0-7.1-7.1l-1.5 1.5"/><path d="M14 10a5 5 0 0 0-7.1 0l-3 3a5 5 0 0 0 7.1 7.1l1.5-1.5"/></svg>
+              <span>Copiar enlace</span>
+            </button>
+            <a role="menuitem" data-compartir="whatsapp" target="_blank" rel="noopener noreferrer" href="#compartir">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.4 8.4 0 0 1-12.4 7.4L3 21l2.1-5.4A8.4 8.4 0 1 1 21 11.5z"/></svg>
+              <span>WhatsApp</span>
+            </a>
+            <a role="menuitem" data-compartir="telegram" target="_blank" rel="noopener noreferrer" href="#compartir">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m22 2-7 20-4-9-9-4z"/><path d="M22 2 11 13"/></svg>
+              <span>Telegram</span>
+            </a>
+            <a role="menuitem" data-compartir="correo" href="#compartir">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 6L2 7"/></svg>
+              <span>Correo electrónico</span>
+            </a>
+            <hr>
+            <button type="button" role="menuitem" data-compartir="sistema" hidden>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><path d="m16 6-4-4-4 4"/><path d="M12 2v13"/></svg>
+              <span>Más opciones…</span>
+            </button>
+            <a role="menuitem" href="#compartir" data-compartir="qr">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><path d="M14 14h3v3h-3zM20 14v.01M14 20h.01M17 20h4v-3"/></svg>
+              <span>Código QR y enlace directo</span>
+            </a>
+          </div>
+        </div>
         <a class="boton pequeno" href="descargar/">Descargar</a>
       </nav>
     </div>
@@ -776,6 +850,62 @@
         setTimeout(() => { boton.textContent = "Copiar"; boton.classList.remove("hecho"); }, 1800);
       });
     });
+
+    // ---------- Menú «Compartir» de la cabecera ----------
+    (() => {
+      const URL_WEB = "https://oriol-1.github.io/descargador-de-videos/";
+      const TITULO = "Descargador de vídeos";
+      const TEXTO = "Programa gratuito y de código abierto para Windows: descarga un vídeo en MP4 o une dos en uno solo.";
+      const boton = document.getElementById("boton-compartir");
+      const panel = document.getElementById("panel-compartir");
+      const opciones = () => [...panel.querySelectorAll("[role=menuitem]:not([hidden])")];
+      const q = encodeURIComponent;
+
+      panel.querySelector('[data-compartir="whatsapp"]').href = `https://wa.me/?text=${q(TEXTO + " " + URL_WEB)}`;
+      panel.querySelector('[data-compartir="telegram"]').href = `https://t.me/share/url?url=${q(URL_WEB)}&text=${q(TEXTO)}`;
+      panel.querySelector('[data-compartir="correo"]').href = `mailto:?subject=${q(TITULO)}&body=${q(TEXTO + "\n\n" + URL_WEB)}`;
+      const sistema = panel.querySelector('[data-compartir="sistema"]');
+      if (navigator.share) sistema.hidden = false;
+      else sistema.previousElementSibling.hidden = true;  // sin «Más opciones», sobra una línea
+
+      const abrir = () => {
+        panel.hidden = false; boton.setAttribute("aria-expanded", "true");
+        opciones()[0].focus();
+      };
+      const cerrar = (devolverFoco) => {
+        if (panel.hidden) return;
+        panel.hidden = true; boton.setAttribute("aria-expanded", "false");
+        if (devolverFoco) boton.focus();
+      };
+      boton.addEventListener("click", e => { e.preventDefault(); panel.hidden ? abrir() : cerrar(true); });
+      document.addEventListener("click", e => { if (!e.target.closest(".compartir-menu")) cerrar(false); });
+      panel.addEventListener("keydown", e => {
+        const lista = opciones(), i = lista.indexOf(document.activeElement);
+        if (e.key === "Escape") cerrar(true);
+        else if (e.key === "ArrowDown") { e.preventDefault(); lista[(i + 1) % lista.length].focus(); }
+        else if (e.key === "ArrowUp") { e.preventDefault(); lista[(i - 1 + lista.length) % lista.length].focus(); }
+        else if (e.key === "Tab" && !panel.contains(document.activeElement)) cerrar(false);
+      });
+      panel.addEventListener("focusout", e => { if (!panel.contains(e.relatedTarget) && e.relatedTarget !== boton) cerrar(false); });
+
+      panel.addEventListener("click", async e => {
+        const opcion = e.target.closest("[data-compartir]");
+        if (!opcion) return;
+        const tipo = opcion.dataset.compartir;
+        if (tipo === "copiar") {
+          const etiqueta = opcion.querySelector("span");
+          try { await navigator.clipboard.writeText(URL_WEB); etiqueta.textContent = "¡Enlace copiado!"; }
+          catch { prompt("Copia el enlace:", URL_WEB); }
+          opcion.classList.add("hecho");
+          setTimeout(() => { cerrar(true); etiqueta.textContent = "Copiar enlace"; opcion.classList.remove("hecho"); }, 1100);
+        } else if (tipo === "sistema") {
+          cerrar(true);
+          try { await navigator.share({ title: TITULO, text: TEXTO, url: URL_WEB }); } catch {}
+        } else {
+          cerrar(false);
+        }
+      });
+    })();
 
     // ---------- Demo animada del programa ----------
     const ANCHO_DEMO = 680;
