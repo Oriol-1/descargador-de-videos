@@ -1,0 +1,19 @@
+# VÃ­deos descargados
+descargas/
+*.mp4
+*.mkv
+*.webm
+
+# Resultados de la compilaciÃ³n (se publican como Release, no en el cÃ³digo)
+empaquetado/dist/
+empaquetado/bin/
+empaquetado/*.zip
+empaquetado/Instalar*.exe
+empaquetado/*.spec
+
+# Python
+__pycache__/
+*.pyc
+
+# Codigo fuente de terceros (se adjunta a cada Release, no se versiona)
+empaquetado/fuentes-terceros/

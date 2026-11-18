@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Aviso legal · Descargador de vídeos</title>
+  <meta name="description" content="Aviso legal, términos de uso, privacidad y licencias del proyecto sin ánimo de lucro «Descargador de vídeos».">
+  <link rel="icon" type="image/png" href="../icono.png">
+  <meta name="theme-color" content="#FAF6EF">
+  <link rel="stylesheet" href="../fuentes/fuentes.css">
+  <style>
+    :root {
+      --papel: #FAF6EF; --papel-2: #F2E9DB; --tarjeta: #FFFDF9; --tinta: #2A1F17; --tinta-suave: #6B5A4B;
+      --linea: #E4D6C3; --acento: #B9501C; --acento-suave: #F5DFCC;
+      --titulos: "Instrument Sans", "Segoe UI", system-ui, sans-serif;
+      --sans: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+      color-scheme: light;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; scroll-padding-top: 24px; }
+    @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+    body { margin: 0; background: var(--papel); color: var(--tinta); font: 17px/1.7 var(--sans); -webkit-font-smoothing: antialiased; }
+    a { color: var(--acento); text-underline-offset: 3px; }
+    .ancho { max-width: 1320px; margin: 0 auto; padding: 0 clamp(16px, 4vw, 56px); }
+    .cabecera { border-bottom: 1px solid var(--linea); }
+    .cabecera .ancho { display: flex; align-items: center; justify-content: space-between; height: 72px; gap: 16px; }
+    .marca { display: flex; align-items: center; gap: 12px; color: var(--tinta); text-decoration: none; font: 600 1.02rem var(--titulos); }
+    .marca img { width: 32px; height: 32px; border-radius: 7px; }
+    .volver { color: var(--tinta-suave); font-size: .95rem; }
+
+    .portadilla { padding: clamp(40px, 6vw, 80px) 0 clamp(28px, 4vw, 48px); border-bottom: 1px solid var(--linea); }
+    .antetitulo { font-size: .78rem; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--acento); margin: 0 0 12px; }
+    h1 { font: 700 clamp(2.2rem, 4.4vw, 3.6rem)/1.05 var(--titulos); letter-spacing: -.022em; margin: 0; }
+    .resumen { max-width: 46em; color: var(--tinta-suave); font-size: 1.1rem; margin: 18px 0 0; }
+    .sello {
+      display: inline-flex; align-items: center; gap: 10px; margin-top: 22px; padding: 10px 16px; border-radius: 999px;
+      background: var(--acento-suave); color: var(--tinta); font-weight: 600; font-size: .95rem;
+    }
+
+    .cuerpo { display: grid; grid-template-columns: 260px minmax(0, 1fr); gap: clamp(32px, 5vw, 72px); padding-top: clamp(32px, 5vw, 56px); padding-bottom: 80px; }
+    .indice { position: sticky; top: 24px; align-self: start; }
+    .indice p { font-size: .76rem; letter-spacing: .12em; text-transform: uppercase; font-weight: 600; color: var(--tinta-suave); margin: 0 0 10px; }
+    .indice ol { list-style: none; margin: 0; padding: 0; border-left: 2px solid var(--linea); }
+    .indice a { display: block; padding: 6px 0 6px 16px; margin-left: -2px; border-left: 2px solid transparent; color: var(--tinta-suave); text-decoration: none; font-size: .95rem; }
+    .indice a:hover { color: var(--tinta); border-left-color: var(--acento); }
+
+    article section { padding: 0 0 36px; margin: 0 0 36px; border-bottom: 1px solid var(--linea); max-width: 50em; }
+    article section:last-child { border-bottom: 0; }
+    h2 { font: 600 clamp(1.5rem, 2.4vw, 1.9rem)/1.15 var(--titulos); letter-spacing: -.015em; margin: 0 0 14px; }
+    h3 { font: 600 1.1rem var(--titulos); margin: 22px 0 6px; }
+    article p, article li { color: #4A3B2F; }
+    article ul { padding-left: 22px; }
+    article li { margin: 6px 0; }
+    strong { color: var(--tinta); }
+    .destacado { background: var(--tarjeta); border: 1px solid var(--linea); border-left: 5px solid var(--acento); border-radius: 10px; padding: 16px 20px; }
+    .destacado p { margin: 0; }
+    .tabla { width: 100%; border-collapse: collapse; font-size: .95rem; margin-top: 10px; }
+    .tabla th, .tabla td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--linea); vertical-align: top; }
+    .tabla th { font: 600 .78rem var(--sans); letter-spacing: .08em; text-transform: uppercase; color: var(--tinta-suave); }
+    .pie { border-top: 1px solid var(--linea); padding: 28px 0 40px; color: var(--tinta-suave); font-size: .9rem; }
+
+    @media (max-width: 860px) {
+      .cuerpo { grid-template-columns: 1fr; }
+      .indice { position: static; }
+      .tabla { display: block; overflow-x: auto; }
+    }
+  </style>
+</head>
+<body>
+  <header class="cabecera">
+    <div class="ancho">
+      <a class="marca" href="../"><img src="../icono.png" alt="" width="32" height="32">Descargador de vídeos</a>
+      <a class="volver" href="../">← Volver a la web</a>
+    </div>
+  </header>
+
+  <div class="portadilla">
+    <div class="ancho">
+      <p class="antetitulo">Información legal</p>
+      <h1>Aviso legal, términos y privacidad</h1>
+      <p class="resumen">En resumen: es un <strong>proyecto personal y gratuito, sin ánimo de lucro</strong>. El programa es una herramienta técnica que se usa bajo la responsabilidad de cada persona, solo con contenido que tenga derecho a descargar. No hay anuncios, cookies ni recogida de datos.</p>
+      <span class="sello">Proyecto sin ánimo de lucro · Última actualización: 18 de noviembre de 2026</span>
+    </div>
+  </div>
+
+  <div class="ancho cuerpo">
+    <nav class="indice" aria-label="Índice">
+      <p>Contenido</p>
+      <ol>
+        <li><a href="#aviso-legal">1. Aviso legal</a></li>
+        <li><a href="#sin-animo-de-lucro">2. Sin ánimo de lucro</a></li>
+        <li><a href="#terminos">3. Términos de uso</a></li>
+        <li><a href="#uso-permitido">4. Uso permitido y prohibido</a></li>
+        <li><a href="#responsabilidad">5. Exención de responsabilidad</a></li>
+        <li><a href="#marcas">6. Marcas y afiliación</a></li>
+        <li><a href="#privacidad">7. Privacidad y cookies</a></li>
+        <li><a href="#licencias">8. Licencias</a></li>
+        <li><a href="#retirada">9. Notificaciones y retirada</a></li>
+        <li><a href="#ley">10. Ley aplicable y cambios</a></li>
+      </ol>
+    </nav>
+
+    <article>
+      <section id="aviso-legal">
+        <h2>1. Aviso legal</h2>
+        <p>Este sitio web (<strong>oriol-1.github.io/descargador-de-videos</strong>) y el programa «Descargador de vídeos» son un <strong>proyecto personal, educativo y de código abierto</strong>, publicado por el usuario de GitHub <a href="https://github.com/Oriol-1">Oriol-1</a> (en adelante, «el autor»).</p>
+        <ul>
+          <li><strong>Naturaleza:</strong> proyecto sin ánimo de lucro que no constituye una actividad económica ni presta servicios a cambio de remuneración.</li>
+          <li><strong>Contacto:</strong> a través de las <a href="https://github.com/Oriol-1/descargador-de-videos/issues">incidencias (Issues) del repositorio en GitHub</a>.</li>
+          <li><strong>Alojamiento:</strong> GitHub Pages, servicio de GitHub, Inc. (88 Colin P. Kelly Jr. Street, San Francisco, CA 94107, EE. UU.).</li>
+        </ul>
+      </section>
+
+      <section id="sin-animo-de-lucro">
+        <h2>2. Proyecto sin ánimo de lucro</h2>
+        <div class="destacado"><p>El autor <strong>no obtiene ningún beneficio económico</strong> de este proyecto: el programa y la web son <strong>gratuitos</strong>, <strong>no contienen publicidad</strong>, <strong>no se aceptan donaciones</strong>, no hay enlaces de afiliados, no se venden licencias ni servicios y <strong>no se recogen ni comercializan datos</strong> de ningún tipo.</p></div>
+        <p>El proyecto se publica con fines educativos y de demostración de conocimientos de programación.</p>
+      </section>
+
+      <section id="terminos">
+        <h2>3. Términos de uso</h2>
+        <p>Al descargar, instalar o usar el programa, o al usar esta web, aceptas estos términos. Si no estás de acuerdo, no lo descargues ni lo uses.</p>
+        <h3>Qué es el programa</h3>
+        <p>Es una interfaz gráfica para Windows que, a partir de un enlace que introduce la propia persona usuaria, guarda en su ordenador un vídeo en formato MP4 o une dos vídeos en un único archivo. Utiliza herramientas de código abierto de terceros (ver <a href="#licencias">Licencias</a>).</p>
+        <h3>Qué no hace el autor</h3>
+        <ul>
+          <li><strong>No aloja, almacena, indexa, ofrece ni distribuye ningún vídeo</strong> ni contenido de terceros. La web no contiene ni enlaza a contenido protegido.</li>
+          <li>No interviene en las descargas: se realizan <strong>directamente</strong> entre el ordenador de la persona usuaria y la web que ella misma elige.</li>
+          <li>No promueve el uso del programa con ninguna plataforma o contenido concretos.</li>
+        </ul>
+      </section>
+
+      <section id="uso-permitido">
+        <h2>4. Uso permitido y prohibido</h2>
+        <p>La persona usuaria es la <strong>única responsable</strong> del uso que haga del programa y del contenido que descargue, y se compromete a cumplir la legislación aplicable —en particular, la normativa de propiedad intelectual— y las condiciones de uso de cada sitio web.</p>
+        <h3>Usos permitidos</h3>
+        <ul>
+          <li>Contenido del que seas <strong>titular</strong> (por ejemplo, tus propios vídeos).</li>
+          <li>Contenido de <strong>dominio público</strong> o publicado con una <strong>licencia que permita su descarga</strong> (por ejemplo, ciertas licencias Creative Commons), respetando sus condiciones.</li>
+          <li>Contenido para el que cuentes con <strong>autorización expresa</strong> de su titular.</li>
+        </ul>
+        <h3>Usos prohibidos</h3>
+        <ul>
+          <li>Descargar, reproducir o conservar contenido protegido <strong>sin autorización</strong> de sus titulares cuando la ley no lo permita.</li>
+          <li><strong>Eludir medidas tecnológicas de protección</strong>, sistemas de pago, restricciones de acceso o controles de edad.</li>
+          <li><strong>Distribuir, comunicar públicamente, vender o explotar</strong> de cualquier forma contenido ajeno.</li>
+          <li>Incumplir las condiciones de servicio de los sitios web desde los que se descargue. Ten en cuenta que <strong>muchas plataformas prohíben la descarga</strong> salvo mediante las funciones que ellas mismas ofrecen.</li>
+        </ul>
+        <p>Las excepciones legales, como la copia privada, tienen requisitos estrictos. <strong>Si tienes dudas sobre si puedes descargar un contenido, no lo descargues.</strong></p>
+      </section>
+
+      <section id="responsabilidad">
+        <h2>5. Exención de responsabilidad</h2>
+        <p>El programa y la web se ofrecen <strong>«tal cual» («as is»)</strong>, de forma gratuita y <strong>sin garantías</strong> de ningún tipo, expresas o implícitas, incluidas las de funcionamiento, idoneidad para un fin concreto o ausencia de errores.</p>
+        <p>En la máxima medida permitida por la ley, el autor <strong>no será responsable</strong> de:</p>
+        <ul>
+          <li>El uso que terceras personas hagan del programa, en especial cualquier uso que infrinja derechos de terceros, la ley o las condiciones de un sitio web.</li>
+          <li>Los contenidos descargados, su licitud, exactitud o calidad.</li>
+          <li>Daños directos o indirectos, pérdida de datos, fallos del equipo o interrupciones derivados de instalar o usar el programa.</li>
+          <li>Cambios en sitios web de terceros que impidan o alteren el funcionamiento del programa.</li>
+        </ul>
+        <p>Nada de lo anterior limita la responsabilidad que, de forma imperativa, no pueda excluirse según la ley aplicable.</p>
+      </section>
+
+      <section id="marcas">
+        <h2>6. Marcas y afiliación</h2>
+        <p>Este proyecto es <strong>independiente</strong>: no está afiliado, asociado, patrocinado ni respaldado por ninguna plataforma de vídeo ni empresa. Los nombres comerciales y marcas que pudieran citarse pertenecen a sus respectivos titulares y se mencionan solo con fines descriptivos. Microsoft, Windows y SmartScreen son marcas de Microsoft Corporation; las capturas del aviso de Windows se muestran únicamente para explicar el proceso de instalación.</p>
+      </section>
+
+      <section id="privacidad">
+        <h2>7. Privacidad y cookies</h2>
+        <div class="destacado"><p>El autor <strong>no recoge, almacena ni trata datos personales</strong>. Esta web <strong>no usa cookies</strong>, ni herramientas de analítica, ni publicidad, ni formularios.</p></div>
+        <h3>En esta web</h3>
+        <ul>
+          <li>Las <strong>fuentes tipográficas se sirven desde esta misma web</strong>: no se conecta con Google Fonts ni con otros terceros para cargarlas.</li>
+          <li>La web está alojada en <strong>GitHub Pages</strong>. Como cualquier servidor, GitHub puede registrar datos técnicos de las visitas (como la dirección IP) por motivos de seguridad. Consulta la <a href="https://docs.github.com/es/site-policy/privacy-policies/github-general-privacy-statement">Declaración de privacidad de GitHub</a>.</li>
+          <li>Para mostrar el número de versión, tu navegador consulta la API pública de GitHub (<code>api.github.com</code>), también bajo la política de privacidad de GitHub. No se envía ningún dato tuyo al autor.</li>
+        </ul>
+        <h3>En el programa</h3>
+        <ul>
+          <li><strong>No incluye telemetría</strong> ni envía información sobre su uso al autor.</li>
+          <li>Solo se conecta a las direcciones que tú introduces y, para comprobar si hay versiones nuevas del motor de descarga, a <strong>pypi.org</strong> (Python Package Index).</li>
+          <li>Guarda en tu propio ordenador la carpeta de destino elegida y la aceptación de estos términos (en <code>%LOCALAPPDATA%\DescargadorVideos</code>). Esos datos nunca salen de tu equipo y se borran al desinstalar el programa (en la versión portable puedes borrar esa carpeta a mano).</li>
+        </ul>
+        <p>Al no tratarse datos personales, no hay responsable del tratamiento al que dirigir solicitudes de acceso, rectificación o supresión. Para cualquier consulta, usa el <a href="#aviso-legal">canal de contacto</a>.</p>
+      </section>
+
+      <section id="licencias">
+        <h2>8. Licencias</h2>
+        <p>El código del proyecto se publica bajo la <a href="https://github.com/Oriol-1/descargador-de-videos/blob/main/LICENSE">licencia MIT</a>, que permite usarlo libremente y lo ofrece sin garantías. El programa incluye componentes de terceros, cada uno con su propia licencia, cuyos textos completos se distribuyen junto al programa (archivo <code>LICENCIAS-TERCEROS.txt</code> y carpeta <code>licencias</code>):</p>
+        <table class="tabla">
+          <thead><tr><th>Componente</th><th>Licencia</th><th>Código fuente</th></tr></thead>
+          <tbody>
+            <tr><td>yt-dlp</td><td>Unlicense (dominio público)</td><td><a href="https://github.com/yt-dlp/yt-dlp">github.com/yt-dlp/yt-dlp</a></td></tr>
+            <tr><td>FFmpeg 9.0.2</td><td>GNU GPL v3 (compilación con libx264)</td><td><a href="https://github.com/Oriol-1/descargador-de-videos/releases/latest">adjunto en cada versión</a> · <a href="https://ffmpeg.org/releases/ffmpeg-9.0.2.tar.xz">ffmpeg.org</a> · <a href="https://www.gyan.dev/ffmpeg/builds/">compilación usada</a></td></tr>
+            <tr><td>Deno</td><td>MIT</td><td><a href="https://github.com/denoland/deno">github.com/denoland/deno</a></td></tr>
+            <tr><td>Python y Tkinter (Tcl/Tk)</td><td>PSF License / licencia BSD de Tcl/Tk</td><td><a href="https://www.python.org">python.org</a></td></tr>
+            <tr><td>PyInstaller (cargador)</td><td>GPL v2 con excepción para cargadores</td><td><a href="https://github.com/pyinstaller/pyinstaller">github.com/pyinstaller</a></td></tr>
+            <tr><td>Fuentes Instrument Sans, IBM Plex</td><td>SIL Open Font License 1.1</td><td><a href="https://github.com/google/fonts">github.com/google/fonts</a></td></tr>
+          </tbody>
+        </table>
+        <p>FFmpeg se distribuye como un programa independiente, sin modificar. Su <strong>código fuente</strong> (versión 9.0.2) se adjunta en cada <a href="https://github.com/Oriol-1/descargador-de-videos/releases">versión publicada</a> como <code>FFmpeg-9.0.2-codigo-fuente.tar.xz</code>. También puedes solicitarlo a través del <a href="#aviso-legal">canal de contacto</a>.</p>
+      </section>
+
+      <section id="retirada">
+        <h2>9. Notificaciones y retirada de contenido</h2>
+        <p>Si consideras que algún elemento de esta web o del repositorio vulnera tus derechos (por ejemplo, de propiedad intelectual o de marca), comunícalo abriendo una <a href="https://github.com/Oriol-1/descargador-de-videos/issues/new">incidencia en GitHub</a> indicando qué contenido es, por qué consideras que vulnera tus derechos y cómo contactarte. Se revisará con prontitud y, si procede, se <strong>retirará o modificará</strong> de inmediato.</p>
+      </section>
+
+      <section id="ley">
+        <h2>10. Ley aplicable y cambios</h2>
+        <p>Estos textos se rigen por la legislación española, sin perjuicio de los derechos que la normativa de consumidores reconozca a cada persona en su lugar de residencia. El autor puede actualizarlos en cualquier momento; la fecha de la última actualización figura al principio de esta página.</p>
+      </section>
+    </article>
+  </div>
+
+  <footer class="pie">
+    <div class="ancho">Descargador de vídeos · Proyecto personal sin ánimo de lucro · <a href="../">Volver a la web</a></div>
+  </footer>
+</body>
+</html>

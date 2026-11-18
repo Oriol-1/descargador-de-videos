@@ -1,0 +1,857 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Descargador de vídeos</title>
+  <meta name="description" content="Programa gratuito para Windows: descarga un vídeo en MP4 o une dos vídeos en uno solo.">
+  <link rel="icon" type="image/png" href="icono.png">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://oriol-1.github.io/descargador-de-videos/">
+  <meta property="og:title" content="Descargador de vídeos · Gratis para Windows">
+  <meta property="og:description" content="Descarga un vídeo en MP4 o une dos en uno solo. Sin anuncios ni cuentas.">
+  <meta property="og:image" content="https://oriol-1.github.io/descargador-de-videos/og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="theme-color" content="#FAF6EF">
+  <link rel="preload" href="fuentes/instrumentsans.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="fuentes/fuentes.css">
+  <style>
+    :root {
+      --papel: #FAF6EF;
+      --papel-2: #F2E9DB;
+      --tarjeta: #FFFDF9;
+      --tinta: #2A1F17;
+      --tinta-suave: #6B5A4B;
+      --linea: #E4D6C3;
+      --acento: #B9501C;
+      --acento-hover: #9A4116;
+      --acento-suave: #F5DFCC;
+      --oliva: #6F7A3A;
+      --banda: #2B1E15;
+      --banda-texto: #F4EADF;
+      --banda-suave: #C8B49F;
+      --banda-linea: #48362A;
+      --titulos: "Instrument Sans", "Segoe UI", system-ui, sans-serif;
+      --sans: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+      --mono: "IBM Plex Mono", Consolas, monospace;
+      --ancho: 1320px;
+      --margen: clamp(16px, 4vw, 56px);
+      color-scheme: light;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; scroll-padding-top: 88px; }
+    body {
+      margin: 0; background: var(--papel); color: var(--tinta);
+      font: 17px/1.65 var(--sans); -webkit-font-smoothing: antialiased;
+    }
+    img { max-width: 100%; height: auto; display: block; }
+    a { color: var(--acento); text-underline-offset: 3px; }
+    a:focus-visible, button:focus-visible, summary:focus-visible, input:focus-visible {
+      outline: 2px solid var(--acento); outline-offset: 3px; border-radius: 4px;
+    }
+    .ancho { max-width: var(--ancho); margin: 0 auto; padding: 0 var(--margen); }
+    h1, h2, h3 { font-family: var(--titulos); font-weight: 600; line-height: 1.1; letter-spacing: -.02em; margin: 0; }
+    .antetitulo {
+      font-size: .78rem; font-weight: 600; letter-spacing: .14em; text-transform: uppercase;
+      color: var(--acento); margin: 0 0 14px;
+    }
+
+    /* ---------- Apariciones al hacer scroll (solo con JavaScript) ---------- */
+    .js .aparece { opacity: 0; transform: translateY(18px); transition: opacity .7s ease, transform .7s ease; }
+    .js .aparece.visto { opacity: 1; transform: none; }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      .js .aparece { opacity: 1; transform: none; transition: none; }
+    }
+
+    /* ---------- Botones ---------- */
+    .boton {
+      display: inline-flex; align-items: center; gap: 10px;
+      background: var(--acento); color: #fff;
+      font: 600 1rem/1 var(--sans); text-decoration: none;
+      padding: 17px 28px; border-radius: 6px; border: 0; cursor: pointer;
+      box-shadow: 0 1px 0 rgba(255,255,255,.25) inset, 0 8px 22px -10px rgba(154, 65, 22, .7);
+      transition: background .15s, transform .15s;
+    }
+    .boton:hover { background: var(--acento-hover); transform: translateY(-1px); }
+    .boton svg { width: 18px; height: 18px; flex: none; }
+    .boton.pequeno { padding: 10px 16px; font-size: .92rem; box-shadow: none; }
+
+    /* ---------- Cabecera fija ---------- */
+    .cabecera {
+      position: sticky; top: 0; z-index: 20;
+      background: rgba(250, 246, 239, .82); backdrop-filter: saturate(1.4) blur(12px); -webkit-backdrop-filter: saturate(1.4) blur(12px);
+      border-bottom: 1px solid transparent; transition: border-color .2s, box-shadow .2s;
+    }
+    .cabecera.con-sombra { border-bottom-color: var(--linea); box-shadow: 0 6px 24px -18px rgba(60, 35, 15, .5); }
+    .cabecera .ancho { display: flex; align-items: center; justify-content: space-between; gap: 24px; height: 72px; }
+    .marca { display: flex; align-items: center; gap: 12px; color: var(--tinta); text-decoration: none; font: 600 1.02rem var(--titulos); letter-spacing: -.01em; }
+    .marca img { width: 32px; height: 32px; border-radius: 7px; }
+    .menu { display: flex; align-items: center; gap: 30px; }
+    .menu a:not(.boton) { color: var(--tinta-suave); text-decoration: none; font-size: .95rem; }
+    .menu a:not(.boton):hover { color: var(--tinta); }
+
+    /* ---------- Portada ---------- */
+    .portada { padding: clamp(40px, 6vw, 88px) 0 clamp(28px, 3.5vw, 48px); overflow: hidden; }
+    .portada .ancho {
+      display: grid; grid-template-columns: minmax(0, 6fr) minmax(0, 7fr);
+      gap: clamp(36px, 4.5vw, 72px); align-items: center;
+    }
+    .portada h1 { font-size: clamp(2.6rem, 4.3vw, 4.1rem); font-weight: 700; line-height: 1.03; letter-spacing: -.025em; word-spacing: .04em; text-wrap: balance; }
+    .portada h1 em { font-style: normal; color: var(--acento); }
+    .entradilla { font-size: clamp(1.05rem, 1.4vw, 1.2rem); color: var(--tinta-suave); margin: 24px 0 36px; max-width: 33em; }
+    .acciones { display: flex; flex-wrap: wrap; align-items: center; gap: 14px 28px; }
+    .acciones .secundario { color: var(--tinta); font-weight: 500; }
+    .nota-instalar { margin: 18px 0 0; font-size: .92rem; color: var(--tinta-suave); max-width: 36em; line-height: 1.9; }
+    .nota-instalar mark { font-size: .95em; }
+    .aviso-plataforma {
+      display: none; margin: 18px 0 0; padding: 10px 14px; border-radius: 6px;
+      background: var(--acento-suave); font-size: .92rem; max-width: 33em;
+    }
+    .aviso-plataforma.visible { display: block; }
+    .ficha {
+      display: grid; grid-template-columns: repeat(4, auto); justify-content: start; gap: 8px 32px;
+      margin: 36px 0 0; padding: 20px 0 0; border-top: 1px solid var(--linea); color: var(--tinta-suave); font-size: .92rem;
+    }
+    .ficha dt { font-size: .72rem; letter-spacing: .1em; text-transform: uppercase; }
+    .ficha dd { margin: 2px 0 0; color: var(--tinta); font-weight: 600; }
+
+    /* Escaparate con la demo */
+    .escaparate {
+      position: relative; margin: 0;
+      background:
+        radial-gradient(120% 90% at 100% 0%, #EBD3B8 0%, transparent 55%),
+        linear-gradient(160deg, #F3E6D3, #EAD8C0);
+      border: 1px solid var(--linea); border-radius: 14px;
+      padding: clamp(18px, 3.2vw, 44px);
+    }
+    .escaparate::after {
+      content: "Demostración animada"; position: absolute; left: clamp(18px, 3.2vw, 44px); bottom: 12px;
+      font-size: .72rem; letter-spacing: .1em; text-transform: uppercase; color: #8C7560;
+    }
+    .demo-marco { position: relative; }
+    .demo {
+      position: absolute; top: 0; left: 0; width: 680px; transform-origin: top left;
+      font: 12.5px/1.35 "Segoe UI", system-ui, sans-serif; color: #1a1a1a;
+    }
+    .ventana {
+      background: #F0F0F0; border-radius: 8px; overflow: hidden;
+      box-shadow: 0 1px 2px rgba(60,35,15,.12), 0 24px 60px -12px rgba(60,35,15,.38);
+      border: 1px solid #CFC5B8;
+    }
+    .v-titulo { display: flex; align-items: center; gap: 8px; height: 34px; padding: 0 0 0 12px; background: #FBFBFB; font-size: 12px; }
+    .v-titulo img { width: 16px; height: 16px; border-radius: 3px; }
+    .v-titulo .controles { margin-left: auto; display: flex; }
+    .v-titulo .controles span { width: 46px; height: 34px; display: grid; place-items: center; color: #444; font-size: 13px; }
+    .v-cuerpo { padding: 16px 20px 14px; }
+    .v-cuerpo h4 { margin: 0 0 10px; font: 700 19px "Segoe UI", system-ui, sans-serif; }
+    .v-fila { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+    .radio { display: inline-flex; align-items: center; gap: 6px; margin-left: 10px; }
+    .radio i { width: 13px; height: 13px; border-radius: 50%; border: 1px solid #555; display: inline-block; position: relative; }
+    .radio.on i { border-color: #0067C0; }
+    .radio.on i::after { content: ""; position: absolute; inset: 2.5px; border-radius: 50%; background: #0067C0; }
+    .v-etiqueta { margin: 0 0 3px; }
+    .v-entrada {
+      flex: 1; height: 28px; background: #fff; border: 1px solid #D5D5D5; border-bottom: 1px solid #8A8A8A;
+      padding: 0 8px; display: flex; align-items: center; white-space: nowrap; overflow: hidden; font-size: 12.5px;
+    }
+    .v-entrada.foco { border-bottom: 2px solid #0067C0; }
+    .v-entrada .cursor { width: 1px; height: 15px; background: #111; margin-left: 1px; animation: parpadeo 1s steps(1) infinite; }
+    @keyframes parpadeo { 50% { opacity: 0; } }
+    .v-boton {
+      height: 26px; padding: 0 14px; border: 1px solid #D0D0D0; border-radius: 4px; background: #FDFDFD;
+      display: inline-flex; align-items: center; font-size: 12px; transition: background .15s;
+    }
+    .v-boton.grande { height: 38px; padding: 0 22px; font: 700 14px "Segoe UI", system-ui, sans-serif; }
+    .v-boton.pulsado { background: #E2E2E2; }
+    .v-nota { color: #5a5a5a; margin: 2px 0 10px; font-size: 12px; }
+    .v-carpeta { color: #5a5a5a; font-size: 12px; }
+    .v-progreso { height: 18px; background: #E6E6E6; border: 1px solid #BCBCBC; margin: 12px 0 6px; overflow: hidden; }
+    .v-progreso span { display: block; height: 100%; width: 0; background: #06B025; transition: width .15s linear; }
+    .v-estado { font-size: 12.5px; min-height: 18px; }
+    .v-estado.ok { color: #0a6b2b; font-weight: 700; }
+    .v-registro {
+      height: 96px; margin-top: 6px; background: #fff; border: 1px solid #8A8A8A; padding: 6px 8px;
+      font: 11.5px/1.45 Consolas, monospace; overflow: hidden; white-space: pre;
+    }
+    .v-pie { color: #5a5a5a; font-size: 11.5px; margin-top: 10px; }
+    .dialogo {
+      position: absolute; right: -26px; bottom: 34px; width: 360px; background: #F3F3F3; border-radius: 8px;
+      border: 1px solid #CFC5B8; box-shadow: 0 28px 70px -10px rgba(60,35,15,.5);
+      opacity: 0; transform: translateY(14px) scale(.96); transition: opacity .35s ease, transform .35s cubic-bezier(.2,.9,.3,1.2);
+      pointer-events: none;
+    }
+    .dialogo.abierto { opacity: 1; transform: none; }
+    .dialogo .v-titulo { height: 30px; }
+    .d-cuerpo { display: grid; grid-template-columns: 44px 1fr; gap: 12px; padding: 14px 18px 4px; }
+    .d-cuerpo .check { font: 700 34px/1 "Segoe UI", sans-serif; color: #0a6b2b; }
+    .d-cuerpo strong { display: block; font-size: 17px; margin-bottom: 4px; }
+    .d-botones { display: flex; justify-content: flex-end; gap: 6px; padding: 10px 14px 14px; }
+    .d-botones .v-boton.def { border: 1px solid #0067C0; }
+
+    /* Franja de confianza */
+    .confianza { border-top: 1px solid var(--linea); border-bottom: 1px solid var(--linea); background: var(--tarjeta); }
+    .confianza ul { list-style: none; margin: 0 auto; padding: 18px var(--margen); display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px 32px; }
+    .confianza li { display: flex; align-items: center; gap: 10px; color: var(--tinta-suave); font-size: .95rem; }
+    .confianza strong { color: var(--tinta); font: 700 1.15rem var(--titulos); letter-spacing: -.01em; }
+
+    /* ---------- Secciones ---------- */
+    .seccion { padding: clamp(64px, 8vw, 116px) 0; }
+    .seccion.alterna { background: var(--papel-2); border-top: 1px solid var(--linea); border-bottom: 1px solid var(--linea); }
+    .titular {
+      display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 20px clamp(40px, 5vw, 80px);
+      align-items: end; margin-bottom: clamp(36px, 5vw, 64px);
+    }
+    .titular h2 { font-size: clamp(1.9rem, 3.4vw, 3rem); letter-spacing: -.022em; }
+    .titular p { margin: 0; color: var(--tinta-suave); max-width: 38em; }
+
+    /* Modos de uso */
+    .modos { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(20px, 3vw, 40px); }
+    .modo { background: var(--tarjeta); border: 1px solid var(--linea); border-radius: 12px; padding: clamp(24px, 3vw, 40px); }
+    .modo h3 { font-size: 1.6rem; margin-bottom: 6px; }
+    .modo > p { color: var(--tinta-suave); margin: 0 0 24px; }
+    .modo ol { margin: 0; padding: 0; list-style: none; counter-reset: p; }
+    .modo li { counter-increment: p; position: relative; padding: 12px 0 12px 46px; border-top: 1px solid var(--linea); }
+    .modo li::before { content: counter(p, decimal-leading-zero); position: absolute; left: 0; top: 12px; font: 600 1rem var(--titulos); color: var(--acento); }
+    .resultado { margin-top: 20px; padding: 12px 16px; border-radius: 6px; background: var(--acento-suave); font-size: .93rem; overflow-wrap: anywhere; }
+    .resultado code { font-family: var(--mono); font-size: .88em; }
+
+    /* Así se unen */
+    .union { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: clamp(32px, 5vw, 80px); align-items: center; }
+    .pistas { background: var(--tarjeta); border: 1px solid var(--linea); border-radius: 12px; padding: clamp(20px, 3vw, 36px); }
+    .pista { margin-bottom: 18px; }
+    .pista:last-child { margin: 26px 0 0; padding-top: 22px; border-top: 1px dashed var(--linea); }
+    .pista p { margin: 0 0 6px; font-size: .85rem; color: var(--tinta-suave); display: flex; justify-content: space-between; gap: 12px; }
+    .carril { height: 46px; background: repeating-linear-gradient(90deg, var(--papel-2) 0 1px, transparent 1px 3.03%); border-radius: 6px; display: flex; overflow: hidden; }
+    .clip {
+      height: 100%; display: flex; align-items: center; padding: 0 14px; color: #fff; font: 600 .85rem var(--sans);
+      white-space: nowrap; overflow: hidden;
+    }
+    .clip.uno { background: var(--acento); width: 57.6%; border-radius: 6px; }
+    .clip.dos { background: var(--oliva); width: 42.4%; border-radius: 6px; }
+    .final .clip.uno { border-radius: 6px 0 0 6px; }
+    .final .clip.dos { border-radius: 0 6px 6px 0; box-shadow: inset 2px 0 0 rgba(255,255,255,.7); }
+    .js .final .clip { transform: scaleX(0); transform-origin: left; transition: transform .9s cubic-bezier(.6,0,.2,1); }
+    .js .final .clip.dos { transition-delay: .75s; }
+    .js .visto .final .clip { transform: none; }
+    .union ul { list-style: none; margin: 24px 0 0; padding: 0; }
+    .union li { padding: 14px 0; border-top: 1px solid var(--linea); color: var(--tinta-suave); }
+    .union li strong { display: block; color: var(--tinta); font: 600 1.08rem var(--titulos); margin-bottom: 2px; }
+    @media (prefers-reduced-motion: reduce) { .js .final .clip { transform: none; transition: none; } }
+
+    /* Ventajas */
+    .ventajas { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); margin: clamp(48px, 6vw, 80px) 0 0; border-top: 1px solid var(--tinta); }
+    .ventajas div { padding: 20px 24px 0 0; }
+    .ventajas div + div { padding-left: 24px; border-left: 1px solid var(--linea); }
+    .ventajas dt { font: 600 1.2rem var(--titulos); letter-spacing: -.01em; }
+    .ventajas dd { margin: 6px 0 0; color: var(--tinta-suave); font-size: .95rem; }
+
+    /* Bajo el capó */
+    .flujo { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0; margin: 0 0 clamp(48px, 6vw, 72px); padding: 0; list-style: none; counter-reset: f; }
+    .flujo li { position: relative; padding: 0 24px 0 0; counter-increment: f; }
+    .flujo li::before {
+      content: counter(f); display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%;
+      background: var(--tarjeta); border: 2px solid var(--acento); color: var(--acento); font: 700 1.05rem var(--titulos);
+      position: relative; z-index: 1; margin-bottom: 16px;
+    }
+    .flujo li:not(:last-child)::after {
+      content: ""; position: absolute; top: 22px; left: 44px; right: 0; height: 2px;
+      background: repeating-linear-gradient(90deg, var(--acento) 0 8px, transparent 8px 14px);
+    }
+    .flujo h3 { font-size: 1.2rem; margin-bottom: 6px; }
+    .flujo p { margin: 0; color: var(--tinta-suave); font-size: .95rem; }
+    .flujo code { font-family: var(--mono); font-size: .85em; background: var(--acento-suave); padding: 1px 6px; border-radius: 4px; color: var(--tinta); }
+    .detalles { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0; border-top: 1px solid var(--tinta); margin: 0; }
+    .detalles div { padding: 22px 28px 22px 0; border-bottom: 1px solid var(--linea); }
+    .detalles div:not(:nth-child(3n+1)) { padding-left: 28px; border-left: 1px solid var(--linea); }
+    .detalles dt { font: 600 1.1rem var(--titulos); }
+    .detalles dd { margin: 6px 0 0; color: var(--tinta-suave); font-size: .95rem; }
+    .pila { display: flex; flex-wrap: wrap; gap: 10px; margin: 36px 0 0; padding: 0; list-style: none; }
+    .pila li { border: 1px solid var(--linea); background: var(--tarjeta); border-radius: 999px; padding: 6px 14px; font: 500 .88rem var(--mono); color: var(--tinta); }
+
+    /* Instalación */
+    .pasos { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: clamp(20px, 3vw, 40px); margin: 0; padding: 0; list-style: none; counter-reset: paso; }
+    .pasos li { counter-increment: paso; border-top: 3px solid var(--acento); padding-top: 18px; }
+    .pasos li::before { content: "Paso " counter(paso); display: block; font-size: .76rem; letter-spacing: .12em; text-transform: uppercase; color: var(--acento); font-weight: 600; margin-bottom: 8px; }
+    .pasos h3 { font-size: 1.25rem; margin-bottom: 8px; }
+    .pasos p { margin: 0; color: var(--tinta-suave); font-size: .96rem; }
+    mark {
+      background: #FFE3C4; color: var(--tinta); font-weight: 700; padding: 1px 7px; border-radius: 4px;
+      box-shadow: inset 0 -2px 0 #FF9F43; white-space: nowrap;
+    }
+
+    /* Aviso de Windows (SmartScreen) */
+    .seccion-aviso { padding: 0 0 clamp(48px, 6vw, 80px); }
+    .aviso-windows {
+      background: var(--tarjeta);
+      border: 1px solid var(--linea); border-top: 5px solid #FF9F43; border-radius: 12px;
+      padding: clamp(24px, 3.5vw, 48px);
+      display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 8fr); gap: clamp(28px, 4vw, 56px); align-items: center;
+    }
+    .aviso-windows h3 { font-size: clamp(1.5rem, 2.4vw, 2rem); margin-bottom: 14px; text-wrap: balance; }
+    .aviso-texto > p { color: var(--tinta-suave); margin: 0 0 14px; }
+    .aviso-texto strong { color: var(--tinta); }
+    .aviso-clave { color: var(--tinta) !important; font-weight: 600; margin-top: 22px !important; }
+    .aviso-pasos { list-style: none; margin: 0 0 18px; padding: 0; display: grid; gap: 10px; }
+    .aviso-pasos li { display: flex; align-items: center; flex-wrap: wrap; gap: 6px 10px; font-size: 1.08rem; }
+    .aviso-pasos small { color: var(--tinta-suave); font-size: .85rem; }
+    .aviso-pasos span, .aviso-capturas figcaption span {
+      flex: none; display: inline-grid; place-items: center; width: 30px; height: 30px; border-radius: 50%;
+      background: #FF9F43; color: var(--banda); font: 700 1rem var(--titulos);
+    }
+    .aviso-nota { font-size: .9rem; border-top: 1px solid var(--linea); padding-top: 14px; margin: 0 !important; }
+    .aviso-capturas { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(14px, 2vw, 24px); }
+    .aviso-capturas figure { margin: 0; }
+    .aviso-capturas a { display: block; cursor: zoom-in; }
+    .aviso-capturas img { border-radius: 8px; box-shadow: 0 1px 2px rgba(0,0,0,.08), 0 16px 36px -14px rgba(0, 40, 90, .45); }
+    .aviso-capturas figcaption { display: flex; align-items: center; gap: 10px; margin-top: 14px; font-weight: 600; }
+
+    kbd { font: 500 .85em var(--sans); padding: 1px 6px; border: 1px solid var(--linea); border-bottom-width: 2px; border-radius: 4px; background: var(--tarjeta); white-space: nowrap; }
+
+    /* Preguntas */
+    .preguntas { display: grid; grid-template-columns: 1fr 1fr; gap: 0 clamp(32px, 5vw, 80px); }
+    details { border-top: 1px solid var(--linea); }
+    details:last-child, details:nth-last-child(2):nth-child(odd) { border-bottom: 1px solid var(--linea); }
+    summary { cursor: pointer; list-style: none; padding: 20px 36px 20px 0; position: relative; font: 600 1.06rem var(--titulos); letter-spacing: -.005em; }
+    summary::-webkit-details-marker { display: none; }
+    summary::after { content: "+"; position: absolute; right: 4px; top: 50%; transform: translateY(-50%); font: 400 1.6rem/1 var(--titulos); color: var(--acento); transition: transform .2s; }
+    details[open] summary::after { transform: translateY(-50%) rotate(45deg); }
+    details p { margin: -6px 0 22px; color: var(--tinta-suave); max-width: 36em; }
+
+    /* Uso responsable */
+    .uso { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(20px, 3vw, 36px); }
+    .uso > div { background: var(--tarjeta); border: 1px solid var(--linea); border-radius: 12px; padding: clamp(22px, 2.6vw, 32px); }
+    .uso h3 { font-size: 1.3rem; margin-bottom: 14px; display: flex; align-items: center; gap: 10px; }
+    .uso h3::before { flex: none; display: inline-grid; place-items: center; width: 28px; height: 28px; border-radius: 50%; font: 700 .95rem var(--sans); color: #fff; }
+    .uso-si h3::before { content: "✓"; background: var(--oliva); }
+    .uso-no h3::before { content: "✕"; background: #A63A1C; }
+    .uso-lucro { border-top: 4px solid var(--acento) !important; }
+    .uso-lucro h3::before { content: "€"; background: var(--acento); }
+    .uso ul { margin: 0; padding: 0 0 0 18px; color: var(--tinta-suave); }
+    .uso li { margin: 0 0 10px; }
+    .uso p { margin: 0; color: var(--tinta-suave); }
+    .uso strong { color: var(--tinta); }
+
+    /* Compartir */
+    .banda { background: var(--banda); color: var(--banda-texto); padding: clamp(64px, 8vw, 104px) 0; }
+    .banda .ancho { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr) auto; gap: clamp(32px, 4vw, 64px); align-items: center; }
+    .banda h2 { font-size: clamp(1.8rem, 2.8vw, 2.5rem); letter-spacing: -.022em; text-wrap: balance; }
+    .banda .antetitulo { color: #E8945F; }
+    .banda p { color: var(--banda-suave); margin: 16px 0 0; }
+    .copiables { display: grid; gap: 18px; }
+    .copiable label { display: block; font-size: .8rem; letter-spacing: .08em; text-transform: uppercase; color: var(--banda-suave); margin-bottom: 6px; }
+    .copiable div { display: flex; border: 1px solid var(--banda-linea); border-radius: 6px; overflow: hidden; }
+    .copiable input { flex: 1; min-width: 0; background: transparent; border: 0; color: var(--banda-texto); font: 500 .9rem var(--mono); padding: 14px 16px; text-overflow: ellipsis; }
+    .copiable button { flex: none; border: 0; border-left: 1px solid var(--banda-linea); background: transparent; color: var(--banda-texto); font: 600 .9rem var(--sans); padding: 0 20px; cursor: pointer; }
+    .copiable button:hover { background: #3A2A1F; }
+    .copiable button.hecho { color: #B9D98F; }
+    .qr { margin: 0; }
+    .qr img { width: 148px; height: 148px; background: #fff; padding: 8px; border-radius: 6px; }
+    .qr figcaption { font-size: .85rem; color: var(--banda-suave); margin-top: 10px; text-align: center; }
+
+    /* Pie */
+    .pie { padding: 56px 0 40px; font-size: .93rem; color: var(--tinta-suave); }
+    .pie .ancho { display: grid; grid-template-columns: minmax(0, 2fr) repeat(3, minmax(0, 1fr)); gap: 32px; }
+    .pie h3 { font: 600 .78rem/1 var(--sans); letter-spacing: .12em; text-transform: uppercase; color: var(--tinta); margin-bottom: 14px; }
+    .pie ul { list-style: none; margin: 0; padding: 0; }
+    .pie li { margin: 6px 0; }
+    .pie a { color: var(--tinta-suave); }
+    .pie a:hover { color: var(--tinta); }
+    .pie .legal { grid-column: 1 / -1; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 24px; border-top: 1px solid var(--linea); padding-top: 24px; margin: 16px 0 0; font-size: .86rem; }
+
+    /* ---------- Adaptable ---------- */
+    @media (max-width: 1080px) {
+      .portada .ancho, .union { grid-template-columns: 1fr; }
+      .portada .texto { max-width: 680px; }
+      .ventajas { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 28px; }
+      .ventajas div:nth-child(3) { padding-left: 0; border-left: 0; }
+      .pasos { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 36px; }
+      .detalles { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .detalles div:not(:nth-child(3n+1)) { padding-left: 0; border-left: 0; }
+      .detalles div:nth-child(2n) { padding-left: 28px; border-left: 1px solid var(--linea); }
+      .banda .ancho { grid-template-columns: 1fr auto; }
+      .banda .ancho > div:first-child { grid-column: 1 / -1; }
+      .dialogo { right: -8px; }
+      .aviso-windows { grid-template-columns: 1fr; }
+      .uso { grid-template-columns: 1fr 1fr; }
+      .uso-lucro { grid-column: 1 / -1; }
+    }
+    @media (max-width: 760px) {
+      body { font-size: 16px; }
+      .menu a:not(.boton) { display: none; }
+      .titular, .modos, .preguntas { grid-template-columns: 1fr; }
+      details:nth-last-child(2):nth-child(odd) { border-bottom: 0; }
+      .ficha { grid-template-columns: repeat(2, auto); }
+      .confianza ul { justify-content: flex-start; }
+      .confianza li { width: calc(50% - 16px); }
+      .flujo { grid-template-columns: 1fr; gap: 0; }
+      .flujo li { padding: 0 0 28px 64px; }
+      .flujo li::before { position: absolute; left: 0; top: 0; margin: 0; }
+      .flujo li:not(:last-child)::after { top: 44px; bottom: 0; left: 21px; right: auto; width: 2px; height: auto; background: repeating-linear-gradient(180deg, var(--acento) 0 8px, transparent 8px 14px); }
+      .detalles { grid-template-columns: 1fr; }
+      .detalles div, .detalles div:nth-child(2n) { padding-left: 0; border-left: 0; padding-right: 0; }
+      .banda .ancho { grid-template-columns: 1fr; }
+      .qr { display: none; }
+      .pie .ancho { grid-template-columns: 1fr 1fr; }
+      .pie .ancho > div:first-child { grid-column: 1 / -1; }
+    }
+    @media (max-width: 520px) {
+      .acciones .boton { width: 100%; justify-content: center; }
+      .ventajas, .pasos { grid-template-columns: 1fr; }
+      .ventajas div, .ventajas div + div { padding-left: 0; border-left: 0; }
+      .ventajas div + div { border-top: 1px solid var(--linea); padding-top: 18px; }
+      .confianza li { width: 100%; }
+      .aviso-capturas { grid-template-columns: 1fr; }
+      .uso { grid-template-columns: 1fr; }
+      .escaparate::after { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <script>document.documentElement.classList.add("js");</script>
+
+  <header class="cabecera" id="cabecera">
+    <div class="ancho">
+      <a class="marca" href="./"><img src="icono.png" alt="" width="32" height="32">Descargador de vídeos</a>
+      <nav class="menu" aria-label="Principal">
+        <a href="#como-funciona">Cómo funciona</a>
+        <a href="#bajo-el-capo">Bajo el capó</a>
+        <a href="#instalacion">Instalación</a>
+        <a href="#preguntas">Preguntas</a>
+        <a class="boton pequeno" href="descargar/">Descargar</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <!-- Portada -->
+    <section class="portada">
+      <div class="ancho">
+        <div class="texto">
+          <p class="antetitulo">Gratis para Windows 10 y 11</p>
+          <h1>Descarga vídeos. <em>Únelos</em> en uno solo.</h1>
+          <p class="entradilla">Pega el enlace de un vídeo que tengas derecho a descargar y obtén un MP4 que se abre en cualquier sitio. Si pegas dos, el programa los descarga y los junta en orden: primero el primero, después el segundo.</p>
+          <div class="acciones">
+            <a class="boton" href="https://github.com/Oriol-1/descargador-de-videos/releases/latest/download/Instalar-Descargador-de-videos.exe">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg>
+              Descargar el instalador
+            </a>
+            <a class="secundario" href="https://github.com/Oriol-1/descargador-de-videos/releases/latest/download/Descargador-de-videos-portable.zip">o la versión portable (.zip)</a>
+          </div>
+          <p class="nota-instalar">Al instalar, Windows mostrará un aviso azul. Es normal: pulsa <mark>Más información</mark> → <mark>Ejecutar de todas formas</mark>. <a href="#aviso-windows">Ver con capturas</a></p>
+          <p class="aviso-plataforma" id="aviso-plataforma">Estás en un dispositivo que no es Windows. El programa funciona en PC con Windows 10 y 11: <a href="#compartir">envíate el enlace</a> y descárgalo desde allí.</p>
+          <dl class="ficha">
+            <div><dt>Versión</dt><dd id="version">Última</dd></div>
+            <div><dt>Tamaño</dt><dd id="tamano">82 MB</dd></div>
+            <div><dt>Formato</dt><dd>MP4 · hasta 1080p</dd></div>
+            <div><dt>Precio</dt><dd>Gratis</dd></div>
+          </dl>
+        </div>
+
+        <figure class="escaparate" aria-label="Demostración del programa uniendo dos vídeos">
+          <div class="demo-marco" id="demo-marco">
+            <div class="demo" id="demo" aria-hidden="true">
+              <div class="ventana">
+                <div class="v-titulo"><img src="icono.png" alt="">Descargador de vídeos<span class="controles"><span>—</span><span>☐</span><span>✕</span></span></div>
+                <div class="v-cuerpo">
+                  <h4>Descargador de vídeos</h4>
+                  <div class="v-fila">¿Qué quieres hacer? <span class="radio"><i></i>Descargar un vídeo</span><span class="radio on"><i></i>Unir dos vídeos</span></div>
+                  <p class="v-etiqueta">Enlace 1 (va primero)</p>
+                  <div class="v-fila"><div class="v-entrada" id="d-e1"></div><span class="v-boton" id="d-p1">Pegar</span></div>
+                  <p class="v-etiqueta">Enlace 2 (va después del 1)</p>
+                  <div class="v-fila"><div class="v-entrada" id="d-e2"></div><span class="v-boton" id="d-p2">Pegar</span></div>
+                  <p class="v-nota" id="d-nota">Pega los dos enlaces para unirlos.</p>
+                  <div class="v-fila v-carpeta">Guardar en: &nbsp;C:\Users\usuario\Downloads\Descargador de vídeos</div>
+                  <div class="v-fila"><span class="v-boton grande" id="d-boton">Descargar</span><span class="v-boton">Limpiar</span><span class="v-boton" style="margin-left:auto">Cerrar</span></div>
+                  <div class="v-progreso"><span id="d-barra"></span></div>
+                  <div class="v-estado" id="d-estado">Listo.</div>
+                  <div class="v-registro" id="d-registro"></div>
+                  <div class="v-pie">Motor de descarga: yt-dlp 2026.10.26</div>
+                </div>
+              </div>
+              <div class="dialogo" id="d-dialogo">
+                <div class="v-titulo"><img src="icono.png" alt="">¡Descarga finalizada!<span class="controles"><span>✕</span></span></div>
+                <div class="d-cuerpo"><span class="check">✔</span><div><strong>¡Descarga finalizada!</strong>El vídeo se ha guardado como:<br>Viaje parte 1 + Viaje parte 2.mp4</div></div>
+                <div class="d-botones"><span class="v-boton">▶ Reproducir vídeo</span><span class="v-boton">Abrir carpeta</span><span class="v-boton def">Aceptar</span></div>
+              </div>
+            </div>
+          </div>
+          <noscript><img src="captura.png" width="740" height="631" alt="Ventana del programa"></noscript>
+        </figure>
+      </div>
+    </section>
+
+    <!-- Aviso de Windows al instalar: justo debajo de la descarga -->
+    <section class="seccion-aviso">
+      <div class="ancho">
+        <div class="aviso-windows" id="aviso-windows">
+          <div class="aviso-texto">
+            <p class="antetitulo">Importante al instalar</p>
+            <h3>Verás una pantalla azul de Windows. Es normal.</h3>
+            <p>Windows muestra <strong>«Windows protegió su PC»</strong> con cualquier programa que no tenga una <strong>firma digital de Microsoft</strong>. Esa firma es una <strong>licencia de pago</strong> que cuesta cientos de euros al año, y este programa es gratuito, así que no la tiene. <strong>No significa que tenga virus</strong>: el código es abierto y cualquiera puede revisarlo en GitHub.</p>
+            <p class="aviso-clave">Para instalarlo solo tienes que pulsar dos cosas, en este orden:</p>
+            <ol class="aviso-pasos">
+              <li><span>1</span>Pulsa <mark>Más información</mark> <small>(el enlace bajo el texto)</small></li>
+              <li><span>2</span>Pulsa <mark>Ejecutar de todas formas</mark></li>
+            </ol>
+            <p class="aviso-nota">Si al descargarlo tu navegador también avisa, elige <strong>«Conservar»</strong> en el menú de la descarga.</p>
+          </div>
+          <div class="aviso-capturas">
+            <figure>
+              <a href="aviso-windows-1.png" target="_blank" rel="noopener" title="Ver en grande"><img src="aviso-windows-1.png" width="533" height="498" loading="lazy" alt="Pantalla azul «Windows protegió su PC» con el enlace «Más información» remarcado con el número 1"></a>
+              <figcaption><span>1</span>Pulsa <mark>Más información</mark></figcaption>
+            </figure>
+            <figure>
+              <a href="aviso-windows-2.png" target="_blank" rel="noopener" title="Ver en grande"><img src="aviso-windows-2.png" width="531" height="498" loading="lazy" alt="Pantalla azul con el botón «Ejecutar de todas formas» remarcado con el número 2"></a>
+              <figcaption><span>2</span>Pulsa <mark>Ejecutar de todas formas</mark></figcaption>
+            </figure>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Franja de confianza -->
+    <div class="confianza">
+      <ul class="ancho">
+        <li><strong>46/46</strong> pruebas automáticas superadas</li>
+        <li><strong>0 €</strong> sin ánimo de lucro ni anuncios</li>
+        <li><strong>1080p</strong> en MP4 H.264 + AAC</li>
+        <li><strong>100%</strong> código abierto en GitHub</li>
+      </ul>
+    </div>
+
+    <!-- Cómo funciona -->
+    <section class="seccion" id="como-funciona">
+      <div class="ancho">
+        <div class="titular aparece">
+          <div><p class="antetitulo">Cómo funciona</p><h2>Dos formas de usarlo, una sola ventana</h2></div>
+          <p>Eliges el modo arriba del todo. Por defecto descarga un vídeo; si marcas «Unir dos vídeos» aparece el segundo enlace.</p>
+        </div>
+        <div class="modos">
+          <article class="modo aparece">
+            <h3>Descargar un vídeo</h3>
+            <p>Para guardar un vídeo y verlo sin conexión.</p>
+            <ol>
+              <li>Copia el enlace del vídeo y pulsa <strong>Pegar</strong>.</li>
+              <li>Pulsa <strong>Descargar</strong> y sigue el progreso en la barra.</li>
+              <li>Al terminar suena un aviso: <strong>Reproducir vídeo</strong> o <strong>Abrir carpeta</strong>.</li>
+            </ol>
+            <p class="resultado">Resultado: <code>Título del vídeo.mp4</code></p>
+          </article>
+          <article class="modo aparece">
+            <h3>Unir dos vídeos</h3>
+            <p>Para juntar dos partes en un único archivo.</p>
+            <ol>
+              <li>Marca <strong>Unir dos vídeos</strong> y pega los dos enlaces.</li>
+              <li>Pulsa <strong>Descargar</strong>: baja el primero y después el segundo.</li>
+              <li>Los une en orden. Si tienen distinto tamaño, ajusta el segundo al primero.</li>
+            </ol>
+            <p class="resultado">Resultado: <code>Título 1 + Título 2.mp4</code></p>
+          </article>
+        </div>
+        <dl class="ventajas aparece">
+          <div><dt>MP4 universal</dt><dd>H.264 y AAC: se abre en Windows, Mac, móviles y televisores.</dd></div>
+          <div><dt>Sin perder calidad</dt><dd>Si los dos vídeos coinciden en formato, se unen al instante sin recomprimir.</dd></div>
+          <div><dt>Puedes cancelar</dt><dd>Si cancelas o cierras a mitad, no deja archivos a medias.</dd></div>
+          <div><dt>Siempre al día</dt><dd>Si una web cambia su funcionamiento, «Buscar actualización» pone al día el programa.</dd></div>
+        </dl>
+      </div>
+    </section>
+
+    <!-- Así se unen -->
+    <section class="seccion alterna">
+      <div class="ancho union">
+        <div class="pistas aparece" id="pistas">
+          <div class="pista"><p><span>Enlace 1 · «Viaje parte 1»</span><span>19 s · 320×240</span></p><div class="carril"><span class="clip uno">Vídeo 1</span></div></div>
+          <div class="pista"><p><span>Enlace 2 · «Viaje parte 2»</span><span>14 s · 1920×1080</span></p><div class="carril"><span class="clip dos">Vídeo 2</span></div></div>
+          <div class="pista final"><p><span><strong style="color:var(--tinta)">Resultado · un solo MP4</strong></span><span>33 s · 320×240</span></p><div class="carril"><span class="clip uno">Vídeo 1</span><span class="clip dos">Vídeo 2</span></div></div>
+        </div>
+        <div class="aparece">
+          <p class="antetitulo">La unión</p>
+          <h2 style="font-size:clamp(1.9rem,3.4vw,3rem);letter-spacing:-.022em">Uno detrás de otro, sin cortes</h2>
+          <ul>
+            <li><strong>Si son iguales, al instante</strong>Mismo tamaño y formato: se pegan sin recomprimir, sin perder calidad.</li>
+            <li><strong>Si son distintos, se adaptan</strong>El segundo se ajusta al tamaño del primero, con bandas si cambia la proporción.</li>
+            <li><strong>Siempre con sonido</strong>Si un vídeo no tiene audio, ese tramo se rellena con silencio para que la unión no falle.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Bajo el capó -->
+    <section class="seccion" id="bajo-el-capo">
+      <div class="ancho">
+        <div class="titular aparece">
+          <div><p class="antetitulo">Bajo el capó</p><h2>Sencillo por fuera, cuidado por dentro</h2></div>
+          <p>Una interfaz de tres botones sobre herramientas de referencia, con los detalles que hacen que funcione siempre: reintentos, limpieza y actualizaciones verificadas.</p>
+        </div>
+        <ol class="flujo aparece">
+          <li><h3>Enlace</h3><p>Pegas uno o dos enlaces. El programa comprueba que son válidos antes de empezar.</p></li>
+          <li><h3>Descarga</h3><p><code>yt-dlp</code>, una herramienta de código abierto, obtiene el vídeo en H.264 hasta 1080p.</p></li>
+          <li><h3>Unión</h3><p><code>FFmpeg</code> une sin recomprimir o, si hace falta, convierte el segundo al formato del primero.</p></li>
+          <li><h3>MP4 listo</h3><p>Se guarda en tu carpeta, se borran los temporales y aparece el aviso de finalizado.</p></li>
+        </ol>
+        <dl class="detalles aparece">
+          <div><dt>Reintento automático</dt><dd>Si el servidor rechaza una descarga de forma puntual, lo vuelve a intentar hasta tres veces.</dd></div>
+          <div><dt>Actualizaciones verificadas</dt><dd>El motor se actualiza desde PyPI comprobando la firma SHA-256 de cada archivo.</dd></div>
+          <div><dt>Sin restos</dt><dd>Al cancelar o cerrar a mitad, borra los archivos temporales antes de salir.</dd></div>
+          <div><dt>Errores en español</dt><dd>«Vídeo privado», «sin conexión», «restricción de edad»… explicados con claridad.</dd></div>
+          <div><dt>Sin administrador</dt><dd>Se instala para tu usuario y se desinstala desde Configuración, sin dejar rastro.</dd></div>
+          <div><dt>Probado de verdad</dt><dd>46 pruebas automáticas que pulsan cada botón: términos, descargar, unir, cancelar, cerrar y errores.</dd></div>
+        </dl>
+        <ul class="pila aparece" aria-label="Tecnologías">
+          <li>Python</li><li>Tkinter</li><li>yt-dlp</li><li>FFmpeg</li><li>PyInstaller</li><li>Inno Setup</li><li>GitHub Pages</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Instalación -->
+    <section class="seccion alterna" id="instalacion">
+      <div class="ancho">
+        <div class="titular aparece">
+          <div><p class="antetitulo">Instalación</p><h2>Listo en un minuto</h2></div>
+          <p>Se instala solo para tu usuario, sin pedir permisos de administrador, y se quita como cualquier otra aplicación.</p>
+        </div>
+        <ol class="pasos aparece">
+          <li><h3>Descarga</h3><p>Pulsa «Descargar el instalador» y abre el archivo descargado.</p></li>
+          <li><h3>Aviso de Windows</h3><p>Saldrá «Windows protegió su PC»: pulsa <mark>Más información</mark> y después <mark>Ejecutar de todas formas</mark>. <a href="#aviso-windows">Míralo con capturas</a>.</p></li>
+          <li><h3>Asistente</h3><p>Siguiente → Instalar → Finalizar. Puedes crear un acceso directo en el escritorio.</p></li>
+          <li><h3>Úsalo</h3><p>Ábrelo desde el menú Inicio o el escritorio cuando lo necesites.</p></li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- Preguntas -->
+    <section class="seccion" id="preguntas">
+      <div class="ancho">
+        <div class="titular aparece">
+          <div><p class="antetitulo">Preguntas frecuentes</p><h2>Antes de instalarlo</h2></div>
+          <p>Si tienes otra duda, puedes abrir una consulta en <a href="https://github.com/Oriol-1/descargador-de-videos/issues">GitHub</a>.</p>
+        </div>
+        <div class="preguntas aparece">
+          <details><summary>¿Es gratis?</summary><p>Sí. Es un proyecto personal <strong>sin ánimo de lucro</strong>: sin anuncios, sin cuentas, sin donaciones y sin recoger datos. El código es abierto y está en GitHub.</p></details>
+          <details><summary>¿Es legal usarlo?</summary><p>El programa es una herramienta, como un grabador. Es legal usarlo con <strong>tus propios vídeos</strong>, con contenido de <strong>dominio público o con licencia que permita descargarlo</strong> (por ejemplo, Creative Commons) y con contenido para el que tengas <strong>permiso del titular</strong>. Cada persona es responsable de cumplir la ley y las condiciones de cada web. <a href="legal/#uso-permitido">Ver el uso permitido</a>.</p></details>
+          <details><summary>¿Por qué Windows muestra un aviso al instalarlo?</summary><p>Porque el programa no tiene la firma digital de Microsoft, que es una licencia de pago. Es normal en programas gratuitos y no significa que tenga virus: pulsa <mark>Más información</mark> y después <mark>Ejecutar de todas formas</mark>. <a href="#aviso-windows">Ver con capturas</a>.</p></details>
+          <details><summary>¿Dónde se guardan los vídeos?</summary><p>En la carpeta Descargas, dentro de «Descargador de vídeos». Puedes elegir otra con el botón «Cambiar…» y el programa la recuerda.</p></details>
+          <details><summary>Ha dejado de descargar, ¿qué hago?</summary><p>Las webs de vídeo cambian a menudo. Pulsa «Buscar actualización» en la parte de abajo del programa y reinícialo cuando te lo pida.</p></details>
+          <details><summary>¿Funciona en Mac o en el móvil?</summary><p>No, de momento es solo para Windows 10 y 11.</p></details>
+          <details><summary>¿Cómo lo desinstalo?</summary><p>Configuración → Aplicaciones → Descargador de vídeos → Desinstalar. Los vídeos que hayas descargado no se borran.</p></details>
+        </div>
+      </div>
+    </section>
+
+    <!-- Uso responsable -->
+    <section class="seccion alterna" id="uso-responsable">
+      <div class="ancho">
+        <div class="titular aparece">
+          <div><p class="antetitulo">Uso responsable</p><h2>Una herramienta, no un permiso</h2></div>
+          <p>Este programa es una herramienta técnica, como una grabadora. Quien lo usa es responsable de respetar los derechos de autor y las condiciones de cada web. <a href="legal/#uso-permitido">Leer los términos de uso</a>.</p>
+        </div>
+        <div class="uso aparece">
+          <div class="uso-si">
+            <h3>Puedes usarlo con</h3>
+            <ul>
+              <li>Vídeos <strong>tuyos</strong>, que hayas grabado o publicado tú.</li>
+              <li>Contenido de <strong>dominio público</strong> o con <strong>licencia que permita descargarlo</strong>, como Creative Commons.</li>
+              <li>Contenido para el que tengas <strong>permiso expreso del titular</strong>.</li>
+            </ul>
+          </div>
+          <div class="uso-no">
+            <h3>No lo uses para</h3>
+            <ul>
+              <li>Descargar contenido protegido <strong>sin permiso</strong> de su titular.</li>
+              <li><strong>Eludir</strong> medidas técnicas de protección o restricciones de acceso.</li>
+              <li><strong>Redistribuir, vender o explotar</strong> contenido ajeno.</li>
+            </ul>
+          </div>
+          <div class="uso-lucro">
+            <h3>Proyecto sin ánimo de lucro</h3>
+            <p>Es un proyecto personal y educativo. <strong>No se cobra nada</strong>, no hay anuncios, no se aceptan donaciones y <strong>no se recoge ningún dato</strong>. No está afiliado ni respaldado por ninguna plataforma de vídeo.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Compartir -->
+    <section class="banda" id="compartir">
+      <div class="ancho">
+        <div>
+          <p class="antetitulo">Compártelo</p>
+          <h2>Un enlace y empieza la descarga</h2>
+          <p>Envía el enlace directo a quien lo necesite: al abrirlo se descarga el instalador y ve los pasos para instalarlo.</p>
+        </div>
+        <div class="copiables">
+          <div class="copiable">
+            <label for="enlace-directo">Descarga directa</label>
+            <div><input id="enlace-directo" readonly value="oriol-1.github.io/descargador-de-videos/descargar"><button type="button" data-copiar="https://oriol-1.github.io/descargador-de-videos/descargar">Copiar</button></div>
+          </div>
+          <div class="copiable">
+            <label for="enlace-web">Esta página</label>
+            <div><input id="enlace-web" readonly value="oriol-1.github.io/descargador-de-videos"><button type="button" data-copiar="https://oriol-1.github.io/descargador-de-videos/">Copiar</button></div>
+          </div>
+        </div>
+        <figure class="qr">
+          <img src="qr.png" width="148" height="148" alt="Código QR que lleva a esta página">
+          <figcaption>Escanéalo con el móvil</figcaption>
+        </figure>
+      </div>
+    </section>
+  </main>
+
+  <footer class="pie">
+    <div class="ancho">
+      <div>
+        <a class="marca" href="./"><img src="icono.png" alt="" width="32" height="32">Descargador de vídeos</a>
+        <p>Programa gratuito y de código abierto para Windows.</p>
+      </div>
+      <div>
+        <h3>Descargas</h3>
+        <ul>
+          <li><a href="https://github.com/Oriol-1/descargador-de-videos/releases/latest/download/Instalar-Descargador-de-videos.exe">Instalador</a></li>
+          <li><a href="https://github.com/Oriol-1/descargador-de-videos/releases/latest/download/Descargador-de-videos-portable.zip">Versión portable</a></li>
+          <li><a href="https://github.com/Oriol-1/descargador-de-videos/releases">Todas las versiones</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3>Proyecto</h3>
+        <ul>
+          <li><a href="https://github.com/Oriol-1/descargador-de-videos">Código en GitHub</a></li>
+          <li><a href="https://github.com/Oriol-1">Autor: @Oriol-1</a></li>
+          <li><a href="https://github.com/yt-dlp/yt-dlp">yt-dlp</a> · <a href="https://ffmpeg.org">FFmpeg</a> · <a href="https://deno.com">Deno</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3>Legal</h3>
+        <ul>
+          <li><a href="legal/#aviso-legal">Aviso legal</a></li>
+          <li><a href="legal/#terminos">Términos de uso</a></li>
+          <li><a href="legal/#privacidad">Privacidad y cookies</a></li>
+          <li><a href="legal/#licencias">Licencias</a></li>
+          <li><a href="legal/#retirada">Notificar un problema</a></li>
+        </ul>
+      </div>
+      <p class="legal"><span>Proyecto personal <strong>sin ánimo de lucro</strong>. Usa el programa solo con contenido que tengas derecho a descargar. No está afiliado a ninguna plataforma de vídeo; las marcas citadas pertenecen a sus titulares.</span><span>Un proyecto de <a href="https://github.com/Oriol-1">Oriol-1</a> · Esta web no usa cookies</span></p>
+    </div>
+  </footer>
+
+  <script>
+    const sinMovimiento = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    // Cabecera con sombra al hacer scroll.
+    const cabecera = document.getElementById("cabecera");
+    const sombra = () => cabecera.classList.toggle("con-sombra", scrollY > 8);
+    addEventListener("scroll", sombra, { passive: true }); sombra();
+
+    // Apariciones suaves.
+    const observador = new IntersectionObserver(entradas => {
+      entradas.forEach(e => { if (e.isIntersecting) { e.target.classList.add("visto"); observador.unobserve(e.target); } });
+    }, { threshold: .18 });
+    document.querySelectorAll(".aparece").forEach(el => observador.observe(el));
+
+    // Aviso si no es Windows.
+    const ua = navigator.userAgent;
+    if (!/Windows/i.test(ua) && /Android|iPhone|iPad|Macintosh|Linux|CrOS/i.test(ua)) {
+      document.getElementById("aviso-plataforma").classList.add("visible");
+    }
+
+    // Versión y tamaño reales de la última publicación.
+    fetch("https://api.github.com/repos/Oriol-1/descargador-de-videos/releases/latest")
+      .then(r => r.ok ? r.json() : Promise.reject())
+      .then(rel => {
+        document.getElementById("version").textContent = rel.tag_name.replace(/^v/, "");
+        const inst = (rel.assets || []).find(a => a.name.endsWith(".exe"));
+        if (inst) document.getElementById("tamano").textContent = Math.round(inst.size / 1e6) + " MB";
+      })
+      .catch(() => {});
+
+    // Botones «Copiar».
+    document.querySelectorAll("[data-copiar]").forEach(boton => {
+      boton.addEventListener("click", async () => {
+        try { await navigator.clipboard.writeText(boton.dataset.copiar); boton.textContent = "Copiado"; }
+        catch { boton.previousElementSibling.select(); boton.textContent = "Pulsa Ctrl+C"; }
+        boton.classList.add("hecho");
+        setTimeout(() => { boton.textContent = "Copiar"; boton.classList.remove("hecho"); }, 1800);
+      });
+    });
+
+    // ---------- Demo animada del programa ----------
+    const ANCHO_DEMO = 680;
+    const marco = document.getElementById("demo-marco");
+    const demo = document.getElementById("demo");
+    const escalar = () => {
+      const k = Math.min(1, marco.clientWidth / ANCHO_DEMO);
+      demo.style.transform = `scale(${k})`;
+      marco.style.height = (demo.offsetHeight + 40) * k + "px";
+    };
+    new ResizeObserver(escalar).observe(marco); escalar();
+
+    const $ = id => document.getElementById(id);
+    const e1 = $("d-e1"), e2 = $("d-e2"), barra = $("d-barra"), estado = $("d-estado"),
+          registro = $("d-registro"), boton = $("d-boton"), dialogo = $("d-dialogo"), nota = $("d-nota");
+    const ENLACE1 = "https://example.com/videos/viaje-parte-1";
+    const ENLACE2 = "https://example.com/videos/viaje-parte-2";
+    const espera = ms => new Promise(r => setTimeout(r, ms));
+    const log = t => { registro.textContent += (registro.textContent ? "\n" : "") + t; registro.scrollTop = registro.scrollHeight; };
+    const progreso = (p, t) => { barra.style.width = p + "%"; if (t) estado.textContent = t; };
+
+    async function escribir(caja, texto) {
+      caja.classList.add("foco");
+      for (let i = 1; i <= texto.length; i += 2) {
+        caja.innerHTML = texto.slice(0, i) + '<span class="cursor"></span>';
+        await espera(22);
+      }
+      caja.textContent = texto;
+      caja.classList.remove("foco");
+    }
+    async function pulsar(el) { el.classList.add("pulsado"); await espera(180); el.classList.remove("pulsado"); }
+    async function avanzar(desde, hasta, prefijo, ms) {
+      const pasos = 12;
+      for (let i = 1; i <= pasos; i++) {
+        const p = desde + (hasta - desde) * i / pasos;
+        progreso(p, `${prefijo}descargando ${Math.round((i / pasos) * 100)}%  (6.8MiB/s)`);
+        await espera(ms / pasos);
+      }
+    }
+    function estadoFinal() {
+      e1.textContent = ENLACE1; e2.textContent = ENLACE2;
+      nota.textContent = "Se descargarán los 2 vídeos y se unirán en un solo MP4 (primero el 1).";
+      progreso(100, "✔ Finalizado: Viaje parte 1 + Viaje parte 2.mp4"); estado.className = "v-estado ok";
+      registro.textContent = "Vídeo 1/2: Viaje parte 1\n   320x240, 15 fps, avc1/mp4a\nVídeo 2/2: Viaje parte 2\n   1920x1080, 30 fps, avc1/mp4a\nGuardado: Viaje parte 1 + Viaje parte 2.mp4";
+      registro.scrollTop = registro.scrollHeight;
+      dialogo.classList.add("abierto");
+    }
+    function reiniciar() {
+      e1.textContent = ""; e2.textContent = ""; registro.textContent = ""; estado.className = "v-estado";
+      nota.textContent = "Pega los dos enlaces para unirlos."; boton.textContent = "Descargar";
+      barra.style.transition = "none"; progreso(0, "Listo."); barra.offsetWidth; barra.style.transition = "";
+      dialogo.classList.remove("abierto");
+    }
+    async function bucle() {
+      while (true) {
+        reiniciar();
+        await espera(900);
+        await pulsar($("d-p1")); await escribir(e1, ENLACE1); await espera(350);
+        await pulsar($("d-p2")); await escribir(e2, ENLACE2);
+        nota.textContent = "Se descargarán los 2 vídeos y se unirán en un solo MP4 (primero el 1).";
+        await espera(600);
+        await pulsar(boton); boton.textContent = "Cancelar";
+        log("————————————————————————");
+        log("Vídeo 1/2: Viaje parte 1"); log("   320x240, 15 fps, avc1/mp4a");
+        await avanzar(0, 40, "Vídeo 1/2: ", 1700);
+        log("Vídeo 2/2: Viaje parte 2"); log("   1920x1080, 30 fps, avc1/mp4a");
+        await avanzar(40, 80, "Vídeo 2/2: ", 1700);
+        log("Los vídeos son distintos: se ajusta el 2 al formato del 1.");
+        for (let p = 82; p <= 100; p += 3) { progreso(Math.min(p, 100), "Uniendo vídeos (recodificando)..."); await espera(140); }
+        progreso(100, "✔ Finalizado: Viaje parte 1 + Viaje parte 2.mp4"); estado.className = "v-estado ok";
+        boton.textContent = "Descargar"; log("Guardado: Viaje parte 1 + Viaje parte 2.mp4");
+        await espera(250); dialogo.classList.add("abierto");
+        await espera(3800);
+      }
+    }
+    if (sinMovimiento) estadoFinal(); else bucle();
+  </script>
+</body>
+</html>

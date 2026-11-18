@@ -1,0 +1,71 @@
+DESCARGADOR DE VÍDEOS - TÉRMINOS DE USO
+Última actualización: 18 de noviembre de 2026
+
+Lee estos términos antes de instalar o usar el programa. Si los aceptas,
+podrás instalarlo y usarlo. Si no estás de acuerdo, no lo instales ni lo uses.
+
+1. PROYECTO SIN ÁNIMO DE LUCRO
+   «Descargador de vídeos» es un proyecto personal, educativo y de código
+   abierto, publicado por el usuario de GitHub Oriol-1. Es GRATUITO, no tiene
+   publicidad, no acepta donaciones, no vende nada y NO RECOGE NINGÚN DATO.
+
+2. QUÉ ES EL PROGRAMA
+   Es una herramienta técnica que, a partir de un enlace que introduces tú,
+   guarda un vídeo en tu ordenador en formato MP4 o une dos vídeos en uno.
+   El autor no aloja, ofrece ni distribuye ningún vídeo ni contenido de
+   terceros, y no interviene en las descargas: se hacen directamente entre tu
+   ordenador y la web que tú eliges.
+
+3. USO PERMITIDO
+   Solo puedes usar el programa con:
+   - contenido del que seas titular (por ejemplo, tus propios vídeos);
+   - contenido de dominio público o con una licencia que permita descargarlo
+     (por ejemplo, ciertas licencias Creative Commons), respetando sus
+     condiciones;
+   - contenido para el que tengas autorización expresa de su titular.
+
+4. USO PROHIBIDO
+   No puedes usar el programa para:
+   - descargar contenido protegido sin autorización cuando la ley no lo permita;
+   - eludir medidas tecnológicas de protección, sistemas de pago, restricciones
+     de acceso o controles de edad;
+   - distribuir, comunicar públicamente, vender o explotar contenido ajeno;
+   - incumplir las condiciones de servicio de las webs desde las que descargues.
+     Ten en cuenta que muchas plataformas prohíben la descarga salvo mediante
+     las funciones que ellas mismas ofrecen.
+   Si tienes dudas sobre si puedes descargar un contenido, no lo descargues.
+
+5. TU RESPONSABILIDAD
+   Eres el único responsable del uso que hagas del programa y de los
+   contenidos que descargues, y te comprometes a cumplir la ley aplicable
+   (en particular, la de propiedad intelectual) y las condiciones de cada web.
+
+6. SIN GARANTÍAS Y EXENCIÓN DE RESPONSABILIDAD
+   El programa se ofrece «TAL CUAL», gratis y SIN GARANTÍAS de ningún tipo.
+   En la máxima medida permitida por la ley, el autor no será responsable del
+   uso que se haga del programa, de los contenidos descargados ni de daños
+   directos o indirectos, pérdidas de datos o fallos derivados de instalarlo
+   o usarlo. Nada de lo anterior limita la responsabilidad que no pueda
+   excluirse según la ley.
+
+7. INDEPENDENCIA Y MARCAS
+   El proyecto no está afiliado, patrocinado ni respaldado por ninguna
+   plataforma de vídeo ni empresa. Las marcas citadas pertenecen a sus
+   titulares.
+
+8. PRIVACIDAD
+   El programa no incluye telemetría. Solo se conecta a las direcciones que
+   introduces y a pypi.org para comprobar actualizaciones del motor de
+   descarga. Tus ajustes se guardan únicamente en tu ordenador.
+
+9. LICENCIAS
+   El código propio se publica bajo la licencia MIT (archivo LICENSE).
+   Los componentes de terceros se rigen por sus licencias
+   (LICENCIAS-TERCEROS.txt y carpeta «licencias»).
+
+10. LEY APLICABLE
+   Estos términos se rigen por la legislación española, sin perjuicio de los
+   derechos que la normativa de consumidores te reconozca.
+
+Información completa: https://oriol-1.github.io/descargador-de-videos/legal/
+Contacto: https://github.com/Oriol-1/descargador-de-videos/issues

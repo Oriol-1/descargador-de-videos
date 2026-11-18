@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Descargando… · Descargador de vídeos</title>
+  <meta name="description" content="Descarga directa del instalador de Descargador de vídeos para Windows.">
+  <link rel="icon" type="image/png" href="../icono.png">
+  <meta property="og:title" content="Descargar «Descargador de vídeos»">
+  <meta property="og:description" content="Instalador gratuito para Windows: descarga vídeos en MP4 o une dos en uno.">
+  <meta property="og:image" content="https://oriol-1.github.io/descargador-de-videos/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="theme-color" content="#FAF6EF">
+  <noscript><meta http-equiv="refresh" content="1; url=https://github.com/Oriol-1/descargador-de-videos/releases/latest/download/Instalar-Descargador-de-videos.exe"></noscript>
+  <link rel="stylesheet" href="../fuentes/fuentes.css">
+  <style>
+    :root {
+      --papel: #FAF6EF; --papel-2: #F2E9DB; --tarjeta: #FFFDF9; --tinta: #2A1F17; --tinta-suave: #6B5A4B;
+      --linea: #E4D6C3; --acento: #B9501C; --acento-hover: #9A4116;
+      --titulos: "Instrument Sans", "Segoe UI", system-ui, sans-serif; --sans: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+      color-scheme: light;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; min-height: 100vh; display: flex; flex-direction: column;
+      background: var(--papel); color: var(--tinta); font: 17px/1.65 var(--sans);
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: var(--acento); text-underline-offset: 3px; }
+    .cabecera { border-bottom: 1px solid var(--linea); }
+    .cabecera a {
+      display: flex; align-items: center; gap: 12px; height: 72px; max-width: 1320px; margin: 0 auto;
+      padding: 0 clamp(16px, 4vw, 56px); color: var(--tinta); text-decoration: none; font-weight: 600;
+    }
+    .cabecera img { width: 32px; height: 32px; border-radius: 7px; }
+    main {
+      width: 100%; max-width: 1320px; margin: 0 auto; padding: clamp(36px, 5vw, 72px) clamp(16px, 4vw, 56px);
+      display: grid; grid-template-columns: minmax(0, 6fr) minmax(0, 5fr); gap: clamp(32px, 6vw, 96px); align-items: start;
+    }
+    .antetitulo { font-size: .78rem; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--acento); margin: 0 0 14px; }
+    h1 { font: 700 clamp(2.2rem, 4.4vw, 3.6rem)/1.06 var(--titulos); letter-spacing: -.022em; margin: 0; }
+    .entradilla { color: var(--tinta-suave); font-size: 1.1rem; margin: 20px 0 32px; max-width: 32em; }
+    .boton {
+      display: inline-block; background: var(--acento); color: #fff; font-weight: 600; text-decoration: none;
+      padding: 15px 24px; border-radius: 6px;
+    }
+    .boton:hover { background: var(--acento-hover); }
+    .volver { display: inline-block; margin-left: 22px; color: var(--tinta); font-weight: 500; }
+    .barra { height: 3px; background: var(--linea); border-radius: 2px; overflow: hidden; margin: 40px 0 0; max-width: 420px; }
+    .barra span { display: block; height: 100%; width: 40%; background: var(--acento); animation: avance 1.4s ease-in-out infinite; }
+    @keyframes avance { from { transform: translateX(-100%); } to { transform: translateX(250%); } }
+    @media (prefers-reduced-motion: reduce) { .barra span { animation: none; width: 100%; } }
+
+    .pasos { background: var(--papel-2); border: 1px solid var(--linea); border-radius: 10px; padding: clamp(24px, 3vw, 36px); }
+    .pasos h2 { font: 600 1.4rem/1.2 var(--titulos); margin: 0 0 8px; }
+    .pasos ol { list-style: none; margin: 0; padding: 0; counter-reset: p; }
+    .pasos li { counter-increment: p; position: relative; padding: 14px 0 14px 46px; border-top: 1px solid var(--linea); color: var(--tinta-suave); }
+    .pasos li:first-child { border-top: 0; }
+    .pasos li::before { content: counter(p, decimal-leading-zero); position: absolute; left: 0; top: 14px; font: 600 1rem var(--titulos); color: var(--acento); }
+    .pasos strong { color: var(--tinta); }
+    kbd { font: 500 .85em var(--sans); padding: 1px 6px; border: 1px solid var(--linea); border-bottom-width: 2px; border-radius: 4px; background: var(--tarjeta); color: var(--tinta); white-space: nowrap; }
+
+    mark {
+      background: #FFE3C4; color: var(--tinta); font-weight: 700; padding: 1px 7px; border-radius: 4px;
+      box-shadow: inset 0 -2px 0 #FF9F43; white-space: nowrap;
+    }
+    .destacado {
+      display: block; margin-top: 28px; max-width: 520px; padding: 16px 18px; border-radius: 10px;
+      background: var(--tarjeta); border: 1px solid var(--linea); border-left: 5px solid #FF9F43;
+      color: var(--tinta-suave); text-decoration: none; line-height: 1.9;
+    }
+    .destacado strong { display: block; color: var(--tinta); line-height: 1.5; margin-bottom: 4px; }
+    .destacado .x { display: block; color: var(--acento); font-weight: 600; text-decoration: underline; text-underline-offset: 3px; margin-top: 2px; }
+    .destacado:hover { border-color: #FF9F43; }
+    .aviso { background: var(--papel-2); border-top: 1px solid var(--linea); padding: clamp(40px, 6vw, 80px) 0; }
+    .aviso-dentro {
+      max-width: 1320px; margin: 0 auto; padding: 0 clamp(16px, 4vw, 56px);
+      display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 8fr); gap: clamp(28px, 4vw, 56px); align-items: center;
+    }
+    .aviso h2 { font: 700 clamp(1.6rem, 2.6vw, 2.2rem)/1.12 var(--titulos); letter-spacing: -.02em; margin: 0 0 14px; text-wrap: balance; }
+    .aviso-texto p { color: var(--tinta-suave); margin: 0 0 14px; }
+    .aviso-texto strong { color: var(--tinta); }
+    .aviso-texto .clave { color: var(--tinta); font-weight: 600; margin-top: 20px; }
+    .aviso-texto ol { list-style: none; margin: 0 0 18px; padding: 0; display: grid; gap: 10px; }
+    .aviso-texto li { display: flex; align-items: center; gap: 10px; font-size: 1.08rem; }
+    .aviso span:not(.x) {
+      flex: none; display: inline-grid; place-items: center; width: 30px; height: 30px; border-radius: 50%;
+      background: #FF9F43; color: #2B1E15; font: 700 1rem var(--titulos);
+    }
+    .aviso-texto .nota { font-size: .9rem; border-top: 1px solid var(--linea); padding-top: 14px; margin: 0; }
+    .capturas { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(14px, 2vw, 24px); }
+    .capturas figure { margin: 0; }
+    .capturas a { display: block; cursor: zoom-in; }
+    .capturas img { display: block; max-width: 100%; height: auto; border-radius: 8px; box-shadow: 0 16px 36px -14px rgba(0, 40, 90, .45); }
+    .capturas figcaption { display: flex; align-items: center; gap: 10px; margin-top: 14px; font-weight: 600; }
+
+    @media (max-width: 1000px) { .aviso-dentro { grid-template-columns: 1fr; } }
+    @media (max-width: 560px) { .capturas { grid-template-columns: 1fr; } }
+    @media (max-width: 820px) {
+      main { grid-template-columns: 1fr; }
+      .boton { display: block; text-align: center; }
+      .volver { display: block; margin: 16px 0 0; }
+    }
+  </style>
+</head>
+<body>
+  <header class="cabecera">
+    <a href="../"><img src="../icono.png" alt="" width="32" height="32">Descargador de vídeos</a>
+  </header>
+  <main>
+    <section>
+      <p class="antetitulo">Descarga en curso</p>
+      <h1>Tu descarga está empezando…</h1>
+      <p class="entradilla">Estás descargando el instalador de <strong>Descargador de vídeos</strong> para Windows 10 y 11. Si en unos segundos no ha empezado, usa el botón.</p>
+      <a class="boton" id="enlace"
+         href="https://github.com/Oriol-1/descargador-de-videos/releases/latest/download/Instalar-Descargador-de-videos.exe">Descargar de nuevo</a>
+      <a class="volver" href="../">Ver la página del programa</a>
+      <div class="barra" aria-hidden="true"><span></span></div>
+      <a class="destacado" href="#aviso">
+        <strong>Al abrirlo verás una pantalla azul de Windows. Es normal.</strong>
+        Pulsa <mark>Más información</mark> → <mark>Ejecutar de todas formas</mark>
+        <span class="x">Ver cómo, con capturas ↓</span>
+      </a>
+    </section>
+    <aside class="pasos">
+      <h2>Después de descargarlo</h2>
+      <ol>
+        <li>Abre el archivo <strong>Instalar-Descargador-de-videos.exe</strong>.</li>
+        <li>Saldrá una pantalla azul, «Windows protegió su PC». Es normal: pulsa <mark>Más información</mark> y luego <mark>Ejecutar de todas formas</mark>. <a href="#aviso">Ver capturas ↓</a></li>
+        <li>Sigue el asistente: <strong>Siguiente → Instalar → Finalizar</strong>.</li>
+        <li>Ábrelo desde el menú Inicio o el escritorio cuando lo necesites.</li>
+      </ol>
+    </aside>
+  </main>
+
+  <section class="aviso" id="aviso">
+    <div class="aviso-dentro">
+      <div class="aviso-texto">
+        <p class="antetitulo">Importante al instalar</p>
+        <h2>Verás una pantalla azul de Windows. Es normal.</h2>
+        <p>Windows la muestra con cualquier programa que no tenga una <strong>firma digital de Microsoft</strong>, que es una <strong>licencia de pago</strong> de cientos de euros al año. Este programa es gratuito y no la tiene, pero <strong>no tiene virus</strong>: su código es abierto en GitHub.</p>
+        <p class="clave">Pulsa estas dos cosas, en este orden:</p>
+        <ol>
+          <li><span>1</span>Pulsa <mark>Más información</mark></li>
+          <li><span>2</span>Pulsa <mark>Ejecutar de todas formas</mark></li>
+        </ol>
+        <p class="nota">Si el navegador también avisa al descargar, elige <strong>«Conservar»</strong>.</p>
+      </div>
+      <div class="capturas">
+        <figure>
+          <a href="../aviso-windows-1.png" target="_blank" rel="noopener" title="Ver en grande"><img src="../aviso-windows-1.png" width="533" height="498" alt="Pantalla azul «Windows protegió su PC» con el enlace «Más información» remarcado con el número 1"></a>
+          <figcaption><span>1</span>Pulsa <mark>Más información</mark></figcaption>
+        </figure>
+        <figure>
+          <a href="../aviso-windows-2.png" target="_blank" rel="noopener" title="Ver en grande"><img src="../aviso-windows-2.png" width="531" height="498" alt="Pantalla azul con el botón «Ejecutar de todas formas» remarcado con el número 2"></a>
+          <figcaption><span>2</span>Pulsa <mark>Ejecutar de todas formas</mark></figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+  <script>
+    // Empieza la descarga al momento (sin JavaScript lo hace la etiqueta meta de <noscript>).
+    setTimeout(() => { location.href = document.getElementById("enlace").href; }, 300);
+  </script>
+</body>
+</html>

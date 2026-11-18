@@ -1,0 +1,38 @@
+DESCARGADOR DE VÍDEOS - COMPONENTES DE TERCEROS Y SUS LICENCIAS
+
+El código propio de este proyecto se publica bajo la licencia MIT (LICENSE).
+El programa incluye, sin modificar, los siguientes componentes de terceros.
+Los textos completos de sus licencias están en la carpeta «licencias».
+
+yt-dlp
+  Licencia: The Unlicense (dominio público)       -> licencias/yt-dlp-Unlicense.txt
+  Código fuente: https://github.com/yt-dlp/yt-dlp
+
+FFmpeg (ffmpeg.exe, compilación «essentials» de gyan.dev, con libx264)
+  Licencia: GNU General Public License v3          -> licencias/FFmpeg-GPL-3.0.txt
+  Versión incluida: 9.0.2. Se distribuye como programa independiente y sin modificar.
+  Código fuente de esa versión: se adjunta en cada versión publicada del proyecto
+  (archivo FFmpeg-9.0.2-codigo-fuente.tar.xz en
+  https://github.com/Oriol-1/descargador-de-videos/releases) y en
+  https://ffmpeg.org/releases/ffmpeg-9.0.2.tar.xz
+  Compilación utilizada y librerías que incluye: https://www.gyan.dev/ffmpeg/builds/
+  También puedes solicitar el código fuente correspondiente abriendo una
+  incidencia en https://github.com/Oriol-1/descargador-de-videos/issues
+
+Deno (deno.exe)
+  Licencia: MIT                                    -> licencias/Deno-MIT.txt
+  Código fuente: https://github.com/denoland/deno
+
+Python, incluida la biblioteca estándar y Tkinter
+  Licencia: Python Software Foundation License     -> licencias/Python-PSF.txt
+  Código fuente: https://www.python.org/downloads/source/
+
+Tcl/Tk (usado por Tkinter)
+  Licencia: estilo BSD                             -> licencias/Tcl-Tk.txt
+  Código fuente: https://www.tcl-lang.org
+
+PyInstaller (cargador del ejecutable)
+  Licencia: GPL v2 con excepción para cargadores   -> licencias/PyInstaller-GPL2-con-excepcion.txt
+  Código fuente: https://github.com/pyinstaller/pyinstaller
+
+Instalador creado con Inno Setup (https://jrsoftware.org/isinfo.php).
