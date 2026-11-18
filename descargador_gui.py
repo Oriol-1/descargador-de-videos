@@ -18,6 +18,7 @@ import subprocess
 import sys
 import threading
 import time
+import traceback
 import tkinter as tk
 import urllib.request
 import webbrowser
@@ -209,6 +210,23 @@ def ruta_libre(carpeta, nombre):
     return destino
 
 
+REGISTRO = DATOS / "registro.log"
+_bloqueo_registro = threading.Lock()
+
+
+def anotar(texto):
+    """Guarda una línea en el registro de diagnóstico local (nunca sale del equipo)."""
+    try:
+        with _bloqueo_registro:
+            DATOS.mkdir(parents=True, exist_ok=True)
+            if REGISTRO.exists() and REGISTRO.stat().st_size > 512_000:  # rotación simple
+                REGISTRO.replace(REGISTRO.with_suffix(".log.1"))
+            with REGISTRO.open("a", encoding="utf-8") as f:
+                f.write(f"{time.strftime('%Y-%m-%d %H:%M:%S')}  {texto}\n")
+    except OSError:
+        pass
+
+
 ERRORES_CONOCIDOS = [
     (("Private video",), "El vídeo es privado: solo su autor puede verlo."),
     (("Sign in to confirm your age", "age-restricted", "inappropriate for some users"),
@@ -219,7 +237,11 @@ ERRORES_CONOCIDOS = [
     (("live event will begin", "Premieres in", "is upcoming"), "El vídeo todavía no se ha estrenado."),
     (("Video unavailable", "This video is unavailable", "has been removed", "This video has been"),
      "El vídeo no está disponible (puede haber sido eliminado o ser privado)."),
-    (("Unsupported URL", "is not a valid URL"), "Ese enlace no es de un vídeo compatible."),
+    # Fallo interno de conexión (no es culpa del enlace): va antes que «Unsupported URL:».
+    (("Unable to handle request", "Unexpected error", "No supporting handlers"),
+     "No se pudo establecer la conexión. Vuelve a intentarlo; si se repite, comprueba tu "
+     "conexión a internet o el antivirus."),
+    (("Unsupported URL:", "is not a valid URL"), "Ese enlace no es de un vídeo compatible."),
     (("getaddrinfo failed", "Unable to download webpage", "timed out", "No route to host",
       "Network is unreachable", "Connection refused", "Connection reset"),
      "No se pudo conectar. Comprueba tu conexión a internet y vuelve a intentarlo."),
@@ -261,6 +283,7 @@ class Trabajo:
     # ---- mensajes a la interfaz
     def log(self, texto):
         self.cola.put(("log", texto))
+        anotar(texto)
 
     def estado(self, texto):
         self.cola.put(("estado", texto))
@@ -294,6 +317,7 @@ class Trabajo:
             if self.cancelado.is_set():
                 self.cola.put(("fin", (False, "Operación cancelada.")))
             else:
+                anotar("ERROR " + "".join(traceback.format_exception(e)).strip())
                 original = ANSI.sub("", str(e)).replace("ERROR: ", "").strip() or repr(e)
                 explicado = explicar_error(original)
                 if explicado != original:
@@ -374,7 +398,12 @@ class Trabajo:
                 trabajo.log("Aviso: " + ANSI.sub("", msg))
 
             def error(self, msg):
-                pass  # llega como excepción
+                # El error final llega como excepción; aquí se guardan los internos
+                # (p. ej. «Unexpected error» de una conexión) para poder diagnosticarlos.
+                limpio = ANSI.sub("", msg).replace("ERROR: ", "").strip()
+                anotar("yt-dlp: " + limpio)
+                if "Unexpected error" in limpio:
+                    trabajo.log("Detalle técnico: " + limpio.split(";")[0][:300])
 
         anunciado = []
 
@@ -414,10 +443,15 @@ class Trabajo:
                     info = ydl.extract_info(enlace, download=True)
                 break
             except yt_dlp.utils.DownloadError as e:
-                # A veces el servidor rechaza una descarga (403) de forma puntual: se reintenta.
-                if self.cancelado.is_set() or "403" not in str(e) or intento == intentos:
+                # Fallos puntuales que se arreglan solos al reintentar: el servidor rechaza
+                # la descarga (403) o falla la conexión interna (p. ej. en el primer arranque).
+                texto = str(e)
+                rechazo = "403" in texto
+                conexion = "Unable to handle request" in texto or "Unexpected error" in texto
+                if self.cancelado.is_set() or not (rechazo or conexion) or intento == intentos:
                     raise
-                self.log(f"{prefijo}El servidor rechazó la descarga, reintentando ({intento + 1}/{intentos})...")
+                motivo = "El servidor rechazó la descarga" if rechazo else "Falló la conexión"
+                self.log(f"{prefijo}{motivo}, reintentando ({intento + 1}/{intentos})...")
                 for resto in temp.glob(f"{base}*"):
                     resto.unlink(missing_ok=True)
                 time.sleep(2 * intento)
@@ -905,6 +939,9 @@ class App(tk.Tk):
             ttk.Button(botones, text="Abrir carpeta",
                        command=lambda: (subprocess.Popen(f'explorer /select,"{archivo}"'),
                                         cerrar_dialogo())).pack(side="left", padx=(0, 8))
+        elif REGISTRO.exists():
+            ttk.Button(botones, text="Ver detalles",
+                       command=lambda: os.startfile(REGISTRO)).pack(side="left", padx=(0, 8))
         aceptar = ttk.Button(botones, text="Aceptar", command=cerrar_dialogo)
         aceptar.pack(side="left")
         d.bind("<Return>", cerrar_dialogo)
@@ -998,8 +1035,31 @@ def autoprueba(argumentos):
     (carpeta / "resultado.txt").write_text("\n".join(lineas), encoding="utf-8")
 
 
+def autoprueba_ventana(argumentos):
+    """--autoprueba-ventana CARPETA ENLACE: abre la ventana real (con la comprobación de
+    versión en segundo plano) y pulsa «Descargar» al instante, como en el primer arranque."""
+    carpeta, enlace = Path(argumentos[0]), argumentos[1]
+    app = App()
+    app.config_datos["terminos"] = TERMINOS_VERSION  # solo en memoria, para esta prueba
+    app.carpeta = carpeta
+    app.enlace1.set(enlace)
+    terminar_original = app.terminar
+
+    def terminar(ok, dato):
+        terminar_original(ok, dato)
+        registro = app.texto.get("1.0", "end").strip()
+        (carpeta / "resultado.txt").write_text(f"[fin] {(ok, str(dato))}\n{registro}", encoding="utf-8")
+        app.after(400, app.destroy)
+
+    app.terminar = terminar
+    app.after(10, app.iniciar)
+    app.mainloop()
+
+
 if __name__ == "__main__":
     if len(sys.argv) > 3 and sys.argv[1] == "--autoprueba":
         autoprueba(sys.argv[2:])
+    elif len(sys.argv) > 3 and sys.argv[1] == "--autoprueba-ventana":
+        autoprueba_ventana(sys.argv[2:])
     else:
         App().mainloop()

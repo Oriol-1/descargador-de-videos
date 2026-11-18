@@ -56,7 +56,8 @@ podrás instalarlo y usarlo. Si no estás de acuerdo, no lo instales ni lo uses.
 8. PRIVACIDAD
    El programa no incluye telemetría. Solo se conecta a las direcciones que
    introduces y a pypi.org para comprobar actualizaciones del motor de
-   descarga. Tus ajustes se guardan únicamente en tu ordenador.
+   descarga. Tus ajustes y un registro de diagnóstico de las descargas se
+   guardan únicamente en tu ordenador y nunca se envían a nadie.
 
 9. LICENCIAS
    El código propio se publica bajo la licencia MIT (archivo LICENSE).
