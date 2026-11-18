@@ -26,7 +26,13 @@ import zipfile
 from pathlib import Path
 from tkinter import filedialog, messagebox, ttk
 
-APP = "Descargador de vídeos"
+# Algunos programas (instaladores, depuradores, antivirus) dejan SSLKEYLOGFILE apuntando
+# a un archivo en el que no se puede escribir; Python intenta abrirlo en cada conexión
+# segura y todas fallan («Unable to handle request … unexpected error(s)»).
+# El programa no necesita ese registro de claves, así que se ignora.
+os.environ.pop("SSLKEYLOGFILE", None)
+
+APP ="Descargador de vídeos"
 CONGELADO = getattr(sys, "frozen", False)  # True dentro del .exe
 RECURSOS = Path(getattr(sys, "_MEIPASS", Path(__file__).resolve().parent))
 DIR_PROGRAMA = Path(sys.executable).parent if CONGELADO else Path(__file__).resolve().parent

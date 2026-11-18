@@ -25,7 +25,7 @@ NOMBRE = "Descargador de videos"
 BIN = AQUI / "bin"
 ICONO = AQUI / "icono.ico"
 DIST = AQUI / "dist"
-VERSION = "1.0.2"  # súbela al publicar cambios: el instalador actualiza la versión anterior
+VERSION = "1.0.3"  # súbela al publicar cambios: el instalador actualiza la versión anterior
 INNO = [Path(os.environ.get(v, "")) / "Inno Setup 6" / "ISCC.exe"
         for v in ("ProgramFiles(x86)", "ProgramFiles", "LOCALAPPDATA")]
 INNO.insert(2, Path(os.environ.get("LOCALAPPDATA", "")) / "Programs" / "Inno Setup 6" / "ISCC.exe")
